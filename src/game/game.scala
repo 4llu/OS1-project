@@ -8,11 +8,11 @@ import scala.collection.mutable.ArrayBuffer
 object game {
 
     private val MS_PER_UPDATE = 13
-    
+
     private var renderList = new ArrayBuffer[Renderable]()
     private val updateList = new ArrayBuffer[Updatable]()
 
-    def start(): Unit = {
+    def start(world: World, dif: Difficulty): Unit = {
         this.init()
 
         var previous: Long = System.currentTimeMillis
