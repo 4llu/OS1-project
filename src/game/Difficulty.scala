@@ -3,6 +3,7 @@ package game
 /**
   * Created by Allu on 09/11/2016.
   */
+// TODO Add more parameters
 sealed abstract class Difficulty(val name: String, val hpMod: Double) {
 
 }

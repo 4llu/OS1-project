@@ -4,10 +4,8 @@ package game
   * Created by Allu on 10/11/2016.
   */
 
-// TODO Extend updatable and drawable
-class Player() extends Creature with Updatable{
-    val maxHp = 100
-    var hp = this.maxHp
+// FIXME Creature speed is a completely made up number atm
+class Player(location: Location) extends Creature(location, 100, 10) with Updatable with Drawable {
     val maxMana = 100
     var mana = this.maxMana
 
