@@ -5,7 +5,7 @@ package game
   */
 
 // FIXME Creature speed is a completely made up number atm
-class Player(location: Location) extends Creature(location, 100, 10) with Updatable with Drawable {
+class Player(location: Location) extends Creature(location, 100, 10) {
     val maxMana = 100
     var mana = this.maxMana
 
