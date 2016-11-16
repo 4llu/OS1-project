@@ -9,8 +9,8 @@ object game {
 
     private val MS_PER_UPDATE = 13
 
-    private val player = new Player()
     private val world = new World()
+    private val player = new Player(new Location(100, 200, 5, 5, this.world))
 
     private val renderList = new ArrayBuffer[Renderable]()
     private val updateList = new ArrayBuffer[Updatable]()
