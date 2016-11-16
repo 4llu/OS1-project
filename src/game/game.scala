@@ -16,7 +16,8 @@ object game {
     private val updateList = new ArrayBuffer[Updatable]()
     updateList += this.player
 
-    def start(world: World, dif: Difficulty): Unit = {
+    def start(worldNum: Int, dif: Difficulty): Unit = {
+        // FIXME Turn worldNum into a world
         this.init() // FIXME Is this necessary?
 
         var previous: Long = System.currentTimeMillis
