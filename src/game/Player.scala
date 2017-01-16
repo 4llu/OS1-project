@@ -12,7 +12,8 @@ class Player(location: Location) extends Creature(location, 100, 10) {
   var mana = this.maxMana
   val weapons = Buffer(new Fireball())
   var curWeapon = 0
-  var weapon = this.weapons(this.curWeapon)
+  var weapon: Weapon = null
+  this.weapon = this.weapons(this.curWeapon)
 
   def update(): Unit = {
 
