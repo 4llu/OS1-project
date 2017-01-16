@@ -46,7 +46,7 @@ object Canvas extends Component {
     }
     
     g.drawImage(game.player.sprite, null, 
-        game.player.location.x-game.player.sprite.getWidth/2-game.cameraX, 
-        game.player.location.y-game.player.sprite.getHeight/2-game.cameraY)
+      game.player.location.x-game.player.sprite.getWidth/2-game.cameraX,
+      game.player.location.y-game.player.sprite.getHeight/2-game.cameraY)
   }
 }

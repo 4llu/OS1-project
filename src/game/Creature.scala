@@ -3,9 +3,8 @@ package game
 /**
   * Created by Allu on 10/11/2016.
   */
-abstract class Creature(var location: Location, val maxHp: Int, val speed: Float) extends C_Updatable with C_Drawable {
+abstract class Creature(var location: Location, val speed: Float, var direction: Direction, val maxHp: Int) extends C_Updatable with C_Drawable {
     var hp = maxHp
-    var direction: Direction = South // FIXME Should this be a parameter? (Depends on how monsters are spawned)
     var weapon: Weapon
 
     def move(): Unit = {

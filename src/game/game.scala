@@ -38,7 +38,7 @@ object game {
             println(elapsed)
 
             while (lag >= MS_PER_UPDATE && !this.gameEnded) {
-                this.update()
+                this.update(elapsed)
                 lag -= MS_PER_UPDATE
             }
 
@@ -47,8 +47,8 @@ object game {
 
         // TODO Ending screen and return to menu
     }
-    def update(): Unit = {
-        this.updateList.foreach(n => n.update())
+    def update(timeElapsed: Long): Unit = {
+        this.updateList.foreach(n => n.update(timeElapsed))
     }
 
     def draw(delta: Double): Unit = {
@@ -68,7 +68,7 @@ object game {
         } else if(input == "d") {
           player.location = player.location.move((player.speed*timeElapsed).toInt, 0)
         } else if(input == "click") {
-          println("click")
+          this.updateList ++= player.attack()
         }
       }
       cameraX = player.location.x-Canvas.width/2
