@@ -9,7 +9,7 @@ import scala.collection.mutable.Buffer
 import java.io.File
 import javax.imageio.ImageIO
 
-class Player(location: Location) extends Creature(location, 100, 1.0f) {
+class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, world: World, 100, 1.0f) {
   val maxMana = 100
   var mana = this.maxMana
   val weapons = Buffer(new Fireball())
@@ -18,6 +18,8 @@ class Player(location: Location) extends Creature(location, 100, 1.0f) {
   this.weapon = this.weapons(this.curWeapon)
 
   var sprite = ImageIO.read(new File("media/player.png"))
+  
+  var location = new Location(x, y, sprite.getWidth, sprite.getHeight, world)
       
   def update(): Unit = {
 

@@ -3,50 +3,54 @@ package game
 import scala.collection.mutable.ArrayBuffer
 import java.io.File
 import javax.imageio.ImageIO
+import java.awt.image.BufferedImage
 
 class World {
   
   private val groundTileSet = ImageIO.read(new File("media/ground_tiles.png"))
   private val objectTileSet = ImageIO.read(new File("media/object- layer.png"))
   private val grassImage = groundTileSet.getSubimage(32, 64, 64, 64)
-  private val flowersImage = objectTileSet.getSubimage(352, 32, 32, 32)
-  private val bushImage = objectTileSet.getSubimage(160, 64, 64, 64)
+  private val flowers = objectTileSet.getSubimage(352, 32, 32, 32)
+  private val flowersImage = Canvas.combineImages(grassImage, flowers)
+  private val bush = objectTileSet.getSubimage(160, 64, 64, 64)
+  private val bushImage = Canvas.combineImages(grassImage, bush)
+  
   val backgroundImage = grassImage
   
   private val map = ArrayBuffer(
-    "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    "bb..............................bb",
-    "bb..............................bb",
+    "BbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBb", 
+    "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",  
+    "Bb,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.Bb",  // Bb
+    "bb..............................bb",  // bb = a bush that covers 4 normal tiles
+    "Bb,.ff,.,.,.,.,.,.,.,.,.,.,.,.,.Bb", 
+    "bb..,...........................bb",  // ,.
+    "Bb,...,.,.,.,.,.,.,.,.,.,.,.,.,.Bb",  // .. = a grass tile that covers 4 normal tiles
+    "bb..,...........................bb",
+    "Bb,...,.,.,.,.,.,.,.,.,.,.,.,.,.Bb",  // f = flower tile
     "bb..ff..........................bb",
+    "Bb,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.Bb",
     "bb..............................bb",
-    "bb..............................bb",    
+    "Bb,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.Bb",
     "bb..............................bb",
+    "Bb,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.Bb",
     "bb..............................bb",
-    "bb..ff..........................bb",
+    "Bb,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.Bb",
     "bb..............................bb",
+    "Bb,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.Bb",
     "bb..............................bb",
+    "Bb,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.Bb",
     "bb..............................bb",
+    "Bb,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.Bb",
     "bb..............................bb",
+    "Bb,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.Bb",
     "bb..............................bb",
+    "Bb,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.Bb",
     "bb..............................bb",
+    "Bb,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.Bb",
     "bb..............................bb",
+    "Bb,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.Bb",
     "bb..............................bb",
-    "bb..............................bb",
-    "bb..............................bb",
-    "bb..............................bb",
-    "bb..............................bb",
-    "bb..............................bb",
-    "bb..............................bb",
-    "bb..............................bb",
-    "bb..............................bb",
-    "bb..............................bb",
-    "bb..............................bb",
-    "bb..............................bb",
-    "bb..............................bb",
-    "bb..............................bb",
-    "bb..............................bb",
-    "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "BbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBbBb",
     "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
     
   private val tileWidth = 32
@@ -68,29 +72,39 @@ class World {
       var tile = row(x)
       if (tiles(y)(x).tileType == "default"){
         
-        if (tile == '.') {
+        if (tile == ',') { // Top left corner (32x32) of the 64x64 tile
           tiles(y)(x) = new Tile(grassImage, 
               new Location(x*tileWidth, y*tileHeight, tileWidth*2, tileHeight*2, this), true, "grass")
-          tiles(y)(x+1) = new Tile(null, new Location(0,0,0,0, this), true, "extension")
-          tiles(y+1)(x) = new Tile(null, new Location(0,0,0,0, this), true, "extension")
-          tiles(y+1)(x+1) = new Tile(null, new Location(0,0,0,0, this), true, "extension")
-//          tiles(y)(x+1) = new Tile(grassImage, (x+1)*tileWidth, y*tileHeight, true, "extension")
-//          tiles(y+1)(x) = new Tile(grassImage, x*tileWidth, (y+1)*tileHeight, true, "extension")
-//          tiles(y+1)(x+1) = new Tile(grassImage, x*tileWidth, (y+1)*tileHeight, true, "extension")
-          x += 1
+        } else if (tile == '.') { //The other corners of the 64x64 tile
+          tiles(y)(x) = new Tile(null, 
+              new Location(x*tileWidth, y*tileHeight, tileWidth*2, tileHeight*2, this), true, "extension")
+          
         } else if (tile == 'f') {
           tiles(y)(x) = new Tile(flowersImage, 
               new Location(x*tileWidth, y*tileHeight, tileWidth, tileHeight, this), true, "flowers")
-        } else if (tile == 'b') {
+          
+        } else if (tile == 'B') { // Top left corner (32x32) of the 64x64 tile
           tiles(y)(x) = new Tile(bushImage, 
               new Location(x*tileWidth, y*tileHeight, tileWidth*2, tileHeight*2, this), false, "bush")
-          tiles(y)(x+1) = new Tile(null, new Location(0,0,0,0, this), true, "extension")
-          tiles(y+1)(x) = new Tile(null, new Location(0,0,0,0, this), true, "extension")
-          tiles(y+1)(x+1) = new Tile(null, new Location(0,0,0,0, this), true, "extension")
+        } else if (tile == 'b') { // The other corners of the 64x64 tile
+          tiles(y)(x) = new Tile(bushImage, 
+              new Location(x*tileWidth, y*tileHeight, tileWidth*2, tileHeight*2, this), false, "extension")
         }
       }
       x += 1
     }
     y += 1
   }
+  
+  def isWalkable(location: Location) = {
+    var result = false
+    if (location.x > 0 && location.x < this.width && location.y > 0 && location.y < this.height) {
+      result = (tiles(location.x/tileWidth)(location.y/tileHeight).walkable) && 
+               (tiles((location.x+location.width)/tileWidth)(location.y/tileHeight).walkable) && 
+               (tiles(location.x/tileWidth)((location.y+location.height)/tileHeight).walkable) && 
+               (tiles((location.x+location.width)/tileWidth)((location.y+location.height)/tileHeight).walkable)
+    }
+    result
+  }
+  
 }

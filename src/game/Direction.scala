@@ -1,5 +1,7 @@
 package game
 
+import scala.Vector
+
 /**
   * Created by Allu on 12/11/2016.
   */

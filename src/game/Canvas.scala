@@ -3,6 +3,7 @@ package game
 import scala.swing._
 import scala.swing.event._
 import java.awt.Graphics2D
+import java.awt.image.BufferedImage
 
 object Canvas extends Component {
   
@@ -11,21 +12,17 @@ object Canvas extends Component {
   preferredSize = new Dimension(width, height)
   
   focusable = true
-  listenTo(mouse.clicks)
+//  listenTo(mouse.clicks)
   listenTo(keys)
   
   reactions += {
-    case clickEvent: MouseClicked => 
-      game.takeInput("click")
-    
-    case KeyPressed(_, Key.W, _, _) => 
-      game.takeInput("w")
-    case KeyPressed(_, Key.A, _, _) => 
-      game.takeInput("a")
-    case KeyPressed(_, Key.S, _, _) => 
-      game.takeInput("s")
-    case KeyPressed(_, Key.D, _, _) => 
-      game.takeInput("d")
+//    case clickEvent: MouseClicked => 
+//      println("click")
+      
+    case KeyPressed(_, key, _, _) => 
+      game.takeInput(key, true)
+    case KeyReleased(_, key, _, _) => 
+      game.takeInput(key, false)
   }
   
   override def paintComponent(g : Graphics2D) {
@@ -46,7 +43,17 @@ object Canvas extends Component {
     }
     
     g.drawImage(game.player.sprite, null, 
-        game.player.location.x-game.player.sprite.getWidth/2-game.cameraX, 
-        game.player.location.y-game.player.sprite.getHeight/2-game.cameraY)
+        game.player.location.x-game.cameraX, 
+        game.player.location.y-game.cameraY)
+  }
+  
+  def combineImages(image1: BufferedImage, image2: BufferedImage) = {
+    //Draw image2 on top of image1
+    val resultImage = new BufferedImage(Math.min(image1.getWidth, image2.getWidth), 
+        Math.min(image1.getHeight, image2.getHeight), BufferedImage.TYPE_INT_ARGB)
+    val g = resultImage.getGraphics();
+    g.drawImage(image1, 0, 0, null);
+    g.drawImage(image2, 0, 0, null);
+    resultImage
   }
 }

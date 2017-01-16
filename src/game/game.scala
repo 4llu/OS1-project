@@ -2,7 +2,6 @@ package game
 
 import scala.swing._
 import scala.collection.mutable.ArrayBuffer
-import java.awt.Dimension
 import java.awt.event._
 import scala.swing.event._
 
@@ -11,15 +10,18 @@ object game {
     private val MS_PER_UPDATE = 13
     
     val world = new World()
-    val player = new Player(new Location(100, 200, 5, 5, this.world))
+    val player = new Player(100, 200, this.world)
 
     private var renderList = new ArrayBuffer[C_Renderable]()
     private var updateList = new ArrayBuffer[C_Updatable]()
-    private var inputList = new ArrayBuffer[String]()
+    private var inputList = new ArrayBuffer[(Key.Value, Boolean)]()
     updateList += this.player
-   
-    var cameraX = player.location.x-Canvas.width/2
-    var cameraY = player.location.y-Canvas.height/2
+    
+    private val keysPressed = scala.collection.mutable.Map[Key.Value, Boolean](
+        (Key.W, false), (Key.A, false), (Key.S, false), (Key.D, false))
+    
+    var cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2
+    var cameraY = player.location.y+player.sprite.getHeight/2-Canvas.height/2
 
     def run(worldNum: Int, dif: Difficulty): Unit = {
         // FIXME Turn worldNum into a world
@@ -35,7 +37,6 @@ object game {
             lag += elapsed
 
             this.processInput(elapsed)
-            println(elapsed)
 
             while (lag >= MS_PER_UPDATE && !this.gameEnded) {
                 this.update()
@@ -58,21 +59,35 @@ object game {
 
     def processInput(timeElapsed: Long): Unit = {
       var input = ""
-      for (input <- inputList) {
-        if(input == "w") {
-          player.location = player.location.move(0, (-player.speed*timeElapsed).toInt)
-        } else if(input == "a") {
-          player.location = player.location.move((-player.speed*timeElapsed).toInt, 0)
-        } else if(input == "s") {
-          player.location = player.location.move(0, (player.speed*timeElapsed).toInt)
-        } else if(input == "d") {
-          player.location = player.location.move((player.speed*timeElapsed).toInt, 0)
-        } else if(input == "click") {
-          println("click")
-        }
+      for ((key, pressed) <- inputList) {
+        keysPressed += key -> pressed
       }
-      cameraX = player.location.x-Canvas.width/2
-      cameraY = player.location.y-Canvas.height/2
+      
+      if (keysPressed(Key.W) && keysPressed(Key.A) && !keysPressed(Key.S) && !keysPressed(Key.D)) {
+          player.location = player.location.moveUntilBlocked(
+              -player.speed*timeElapsed/Math.sqrt(2.0), -player.speed*timeElapsed/Math.sqrt(2.0))
+      } else if (keysPressed(Key.W) && !keysPressed(Key.A) && !keysPressed(Key.S) && keysPressed(Key.D)) {
+          player.location = player.location.moveUntilBlocked(
+              player.speed*timeElapsed/Math.sqrt(2.0), -player.speed*timeElapsed/Math.sqrt(2.0))
+      } else if (!keysPressed(Key.W) && !keysPressed(Key.A) && keysPressed(Key.S) && keysPressed(Key.D)) {
+          player.location = player.location.moveUntilBlocked(
+              player.speed*timeElapsed/Math.sqrt(2.0), player.speed*timeElapsed/Math.sqrt(2.0))
+      } else if (!keysPressed(Key.W) && keysPressed(Key.A) && keysPressed(Key.S) && !keysPressed(Key.D)) {
+          player.location = player.location.moveUntilBlocked(
+              -player.speed*timeElapsed/Math.sqrt(2.0), player.speed*timeElapsed/Math.sqrt(2.0))
+              
+      } else if (keysPressed(Key.W) && !keysPressed(Key.A) && !keysPressed(Key.S) && !keysPressed(Key.D)) {
+          player.location = player.location.moveUntilBlocked(0, -player.speed*timeElapsed)
+      } else if (!keysPressed(Key.W) && keysPressed(Key.A) && !keysPressed(Key.S) && !keysPressed(Key.D)) {
+          player.location = player.location.moveUntilBlocked(-player.speed*timeElapsed, 0)
+      } else if (!keysPressed(Key.W) && !keysPressed(Key.A) && keysPressed(Key.S) && !keysPressed(Key.D)) {
+          player.location = player.location.moveUntilBlocked(0, player.speed*timeElapsed)
+      } else if (!keysPressed(Key.W) && !keysPressed(Key.A) && !keysPressed(Key.S) && keysPressed(Key.D)) {
+          player.location = player.location.moveUntilBlocked(player.speed*timeElapsed, 0)
+      }
+      
+      cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2
+      cameraY = player.location.y+player.sprite.getHeight/2-Canvas.height/2
       inputList.clear()
     }
 
@@ -82,7 +97,7 @@ object game {
 
     def gameEnded: Boolean = this.player.isDead
     
-    def takeInput(input: String){
-      inputList += input
+    def takeInput(key: Key.Value, pressed: Boolean){
+      inputList += ((key, pressed))
     }
 }
