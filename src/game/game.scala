@@ -13,8 +13,8 @@ object game {
     val world = new World()
     val player = new Player(new Location(100, 200, 5, 5, this.world))
 
-    private var renderList = new ArrayBuffer[Renderable]()
-    private var updateList = new ArrayBuffer[Updatable]()
+    private var renderList = new ArrayBuffer[C_Renderable]()
+    private var updateList = new ArrayBuffer[C_Updatable]()
     private var inputList = new ArrayBuffer[String]()
     updateList += this.player
    
