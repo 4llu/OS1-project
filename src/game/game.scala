@@ -18,7 +18,7 @@ object game {
     updateList += this.player
     
     private val keysPressed = scala.collection.mutable.Map[Key.Value, Boolean](
-        (Key.W, false), (Key.A, false), (Key.S, false), (Key.D, false))
+        (Key.W, false), (Key.A, false), (Key.S, false), (Key.D, false), (Key.Space, false))
     
     var cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2
     var cameraY = player.location.y+player.sprite.getHeight/2-Canvas.height/2
@@ -39,7 +39,7 @@ object game {
             this.processInput(elapsed)
 
             while (lag >= MS_PER_UPDATE && !this.gameEnded) {
-                this.update()
+                this.update(elapsed)
                 lag -= MS_PER_UPDATE
             }
 
@@ -48,8 +48,8 @@ object game {
 
         // TODO Ending screen and return to menu
     }
-    def update(): Unit = {
-        this.updateList.foreach(n => n.update())
+    def update(timeElapsed: Long): Unit = {
+        this.updateList.foreach(n => n.update(timeElapsed))
     }
 
     def draw(delta: Double): Unit = {
@@ -84,6 +84,10 @@ object game {
           player.location = player.location.moveUntilBlocked(0, player.speed*timeElapsed)
       } else if (!keysPressed(Key.W) && !keysPressed(Key.A) && !keysPressed(Key.S) && keysPressed(Key.D)) {
           player.location = player.location.moveUntilBlocked(player.speed*timeElapsed, 0)
+      }
+      
+      if (keysPressed(Key.Space)) {
+          this.updateList ++= player.attack()
       }
       
       cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2

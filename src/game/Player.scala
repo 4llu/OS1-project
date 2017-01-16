@@ -1,6 +1,6 @@
 package game
 
-import scala.collection.mutable.Buffer
+import scala.collection.mutable.{ArrayBuffer, Buffer}
 
 /**
   * Created by Allu on 10/11/2016.
@@ -9,10 +9,10 @@ import scala.collection.mutable.Buffer
 import java.io.File
 import javax.imageio.ImageIO
 
-class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, world: World, 100, 1.0f) {
+class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, world: World, 1.0f, South, 100) {
   val maxMana = 100
   var mana = this.maxMana
-  val weapons = Buffer(new Fireball())
+  val weapons = Buffer(new FireballSpell())
   var curWeapon = 0
   var weapon: Weapon = null
   this.weapon = this.weapons(this.curWeapon)
@@ -21,7 +21,11 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
   
   var location = new Location(x, y, sprite.getWidth, sprite.getHeight, world)
       
-  def update(): Unit = {
+  def update(timeElapsed: Long): Unit = {
 
+  }
+
+  def attack(): ArrayBuffer[Projectile] = {
+    this.weapon.fire(this.location, this.direction)
   }
 }
