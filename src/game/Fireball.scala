@@ -11,7 +11,7 @@ import javax.imageio.ImageIO
 // FIXME location should be defined in Projectile, but that throws a "Reassignment to val" -error
 // FIXME Should direction be Projectiles parameter?
 class Fireball(var location: Location, val direction: Direction) extends Projectile {
-  var sprite: BufferedImage = ImageIO.read(new File("media/ground_tiles.png"))
+  var sprite: BufferedImage = ImageIO.read(new File("media/fireball.png"))
   var speed = 2.0f
 
   def update(timeElapsed: Long): Unit = {
