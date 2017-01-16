@@ -21,7 +21,7 @@ object game {
     var cameraX = player.location.x-Canvas.width/2
     var cameraY = player.location.y-Canvas.height/2
 
-    def start(worldNum: Int, dif: Difficulty): Unit = {
+    def run(worldNum: Int, dif: Difficulty): Unit = {
         // FIXME Turn worldNum into a world
         this.init() // FIXME Is this necessary?
         

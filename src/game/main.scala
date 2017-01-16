@@ -15,7 +15,7 @@ object main extends SimpleSwingApplication {
   
   new Thread() {
     override def run {
-        game.start(1, Hard)
+        game.run(1, Hard)
     }
   }.start()
 }
