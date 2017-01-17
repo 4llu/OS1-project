@@ -12,12 +12,12 @@ object game {
     val world = new World()
     val player = new Player(100, 200, this.world)
 
-    private var renderList = new ArrayBuffer[C_Renderable]()
-    private var updateList = new ArrayBuffer[C_Updatable]()
+    var renderList = new ArrayBuffer[C_Renderable]()
+    var updateList = new ArrayBuffer[C_Updatable]()
     private var inputList = new ArrayBuffer[(Key.Value, Boolean)]()
-    updateList += this.player
+//    updateList += this.player
     
-    private val keysPressed = scala.collection.mutable.Map[Key.Value, Boolean](
+    val keysPressed = scala.collection.mutable.Map[Key.Value, Boolean](
         (Key.W, false), (Key.A, false), (Key.S, false), (Key.D, false), (Key.Space, false))
     
     var cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2
@@ -36,6 +36,7 @@ object game {
             previous = current
             lag += elapsed
 
+            player.update(elapsed)
             this.processInput(elapsed)
 
             while (lag >= MS_PER_UPDATE && !this.gameEnded) {
@@ -61,33 +62,6 @@ object game {
       var input = ""
       for ((key, pressed) <- inputList) {
         keysPressed += key -> pressed
-      }
-      
-      if (keysPressed(Key.W) && keysPressed(Key.A) && !keysPressed(Key.S) && !keysPressed(Key.D)) {
-          player.location = player.location.moveUntilBlocked(
-              -player.speed*timeElapsed/Math.sqrt(2.0), -player.speed*timeElapsed/Math.sqrt(2.0))
-      } else if (keysPressed(Key.W) && !keysPressed(Key.A) && !keysPressed(Key.S) && keysPressed(Key.D)) {
-          player.location = player.location.moveUntilBlocked(
-              player.speed*timeElapsed/Math.sqrt(2.0), -player.speed*timeElapsed/Math.sqrt(2.0))
-      } else if (!keysPressed(Key.W) && !keysPressed(Key.A) && keysPressed(Key.S) && keysPressed(Key.D)) {
-          player.location = player.location.moveUntilBlocked(
-              player.speed*timeElapsed/Math.sqrt(2.0), player.speed*timeElapsed/Math.sqrt(2.0))
-      } else if (!keysPressed(Key.W) && keysPressed(Key.A) && keysPressed(Key.S) && !keysPressed(Key.D)) {
-          player.location = player.location.moveUntilBlocked(
-              -player.speed*timeElapsed/Math.sqrt(2.0), player.speed*timeElapsed/Math.sqrt(2.0))
-              
-      } else if (keysPressed(Key.W) && !keysPressed(Key.A) && !keysPressed(Key.S) && !keysPressed(Key.D)) {
-          player.location = player.location.moveUntilBlocked(0, -player.speed*timeElapsed)
-      } else if (!keysPressed(Key.W) && keysPressed(Key.A) && !keysPressed(Key.S) && !keysPressed(Key.D)) {
-          player.location = player.location.moveUntilBlocked(-player.speed*timeElapsed, 0)
-      } else if (!keysPressed(Key.W) && !keysPressed(Key.A) && keysPressed(Key.S) && !keysPressed(Key.D)) {
-          player.location = player.location.moveUntilBlocked(0, player.speed*timeElapsed)
-      } else if (!keysPressed(Key.W) && !keysPressed(Key.A) && !keysPressed(Key.S) && keysPressed(Key.D)) {
-          player.location = player.location.moveUntilBlocked(player.speed*timeElapsed, 0)
-      }
-      
-      if (keysPressed(Key.Space)) {
-          this.updateList ++= player.attack()
       }
       
       cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2
