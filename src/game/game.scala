@@ -5,7 +5,7 @@ import scala.collection.mutable.ArrayBuffer
 import java.awt.event._
 import scala.swing.event._
 
-object game {
+object game extends Screen{
 
     private val MS_PER_UPDATE = 13
     

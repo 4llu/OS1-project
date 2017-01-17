@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage
 object Canvas extends Component {
   
   val width = 800
-  val height = 600
+  val height = 650
   preferredSize = new Dimension(width, height)
   
   focusable = true
