@@ -22,14 +22,13 @@ class Location(val x: Int, val y: Int, val width: Int, val height: Int, val worl
     val dy = direction.yStep*speed*timeElapsed
     var resultLocation = this
     var blocked = false
-    val angle = Math.atan2(dy, dx)
     val distance = Math.sqrt(dx*dx+dy*dy)
     
     var i = 1
     val stepSize = 1
     while (i <= distance/stepSize && !blocked) {
-      val newLocation = new Location((this.x + Math.cos(angle)*i*stepSize).toInt, 
-          (this.y + Math.sin(angle)*i*stepSize).toInt, this.width, this.height, this.world)
+      val newLocation = new Location((this.x + direction.xStep*i*stepSize).toInt, 
+          (this.y + direction.yStep*i*stepSize).toInt, this.width, this.height, this.world)
       if (this.world.isWalkable(newLocation)) {
         resultLocation = newLocation
       } else {
