@@ -48,6 +48,6 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
   }
 
   def attack(): ArrayBuffer[Projectile] = {
-    this.weapon.fire(this.location, this.direction)
+    this.weapon.fire(this.location.x, this.location.y, this.world, this.direction)
   }
 }
