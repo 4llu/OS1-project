@@ -65,16 +65,6 @@ class World(worldNum: Int) {
   val width = map(0).length*32
   val height = map.size*32
   
-//  var tiles = ArrayBuffer[ArrayBuffer[Tile]]()
-//  for (y <- 0 to map.size + 2*mapBackgroundHeight) {
-//    val tileRow = ArrayBuffer[Tile]()
-//    for (x <- 0 to map(0).length() + 2*mapBackgroundWidth) {
-//      tileRow += new Tile(backgroundImage, new Location(x*tileWidth, y*tileHeight, tileWidth, tileHeight, this), true, "default")
-//      
-//    }
-//    tiles += tileRow
-//  }
-  
   val tileRow: ArrayBuffer[Tile] = 
     collection.mutable.ArrayBuffer.fill(map(0).length())(new Tile(backgroundImage, 
         new Location(0, 0, 0, 0, this), true, "default"))

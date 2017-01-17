@@ -50,9 +50,12 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
       }
       
       if (game.keysPressed(Key.Space)) {
+        if (this.weapon.canFire) {
           val projectiles = this.attack()
           game.updateList ++= projectiles
           game.renderList ++= projectiles
+          this.weapon.lastFired = System.currentTimeMillis
+        }
       }
   }
 
