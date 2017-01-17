@@ -24,26 +24,22 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
       
   def update(timeElapsed: Long): Unit = {
       if (game.keysPressed(Key.W) && game.keysPressed(Key.A) && !game.keysPressed(Key.S) && !game.keysPressed(Key.D)) {
-          this.location = this.location.moveUntilBlocked(
-              -this.speed*timeElapsed/Math.sqrt(2.0), -this.speed*timeElapsed/Math.sqrt(2.0))
+          this.location = this.location.moveUntilBlocked(NorthWest, this.speed, timeElapsed)
       } else if (game.keysPressed(Key.W) && !game.keysPressed(Key.A) && !game.keysPressed(Key.S) && game.keysPressed(Key.D)) {
-          this.location = this.location.moveUntilBlocked(
-              this.speed*timeElapsed/Math.sqrt(2.0), -this.speed*timeElapsed/Math.sqrt(2.0))
+          this.location = this.location.moveUntilBlocked(NorthEast, this.speed, timeElapsed)
       } else if (!game.keysPressed(Key.W) && !game.keysPressed(Key.A) && game.keysPressed(Key.S) && game.keysPressed(Key.D)) {
-          this.location = this.location.moveUntilBlocked(
-              this.speed*timeElapsed/Math.sqrt(2.0), this.speed*timeElapsed/Math.sqrt(2.0))
+          this.location = this.location.moveUntilBlocked(SouthEast, this.speed, timeElapsed)
       } else if (!game.keysPressed(Key.W) && game.keysPressed(Key.A) && game.keysPressed(Key.S) && !game.keysPressed(Key.D)) {
-          this.location = this.location.moveUntilBlocked(
-              -this.speed*timeElapsed/Math.sqrt(2.0), this.speed*timeElapsed/Math.sqrt(2.0))
+          this.location = this.location.moveUntilBlocked(SouthWest, this.speed, timeElapsed)
               
       } else if (game.keysPressed(Key.W) && !game.keysPressed(Key.A) && !game.keysPressed(Key.S) && !game.keysPressed(Key.D)) {
-          this.location = this.location.moveUntilBlocked(0, -this.speed*timeElapsed)
+          this.location = this.location.moveUntilBlocked(North, this.speed, timeElapsed)
       } else if (!game.keysPressed(Key.W) && game.keysPressed(Key.A) && !game.keysPressed(Key.S) && !game.keysPressed(Key.D)) {
-          this.location = this.location.moveUntilBlocked(-this.speed*timeElapsed, 0)
+          this.location = this.location.moveUntilBlocked(West, this.speed, timeElapsed)
       } else if (!game.keysPressed(Key.W) && !game.keysPressed(Key.A) && game.keysPressed(Key.S) && !game.keysPressed(Key.D)) {
-          this.location = this.location.moveUntilBlocked(0, this.speed*timeElapsed)
+          this.location = this.location.moveUntilBlocked(South, this.speed, timeElapsed)
       } else if (!game.keysPressed(Key.W) && !game.keysPressed(Key.A) && !game.keysPressed(Key.S) && game.keysPressed(Key.D)) {
-          this.location = this.location.moveUntilBlocked(this.speed*timeElapsed, 0)
+          this.location = this.location.moveUntilBlocked(East, this.speed, timeElapsed)
       }
       
       if (game.keysPressed(Key.Space)) {
