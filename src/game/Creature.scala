@@ -15,7 +15,5 @@ abstract class Creature(x: Int, y: Int, world: World, val speed: Float, var dire
     def centerX: Int = this.x + this.sprite.getWidth()/2
     def centerY: Int = this.y + this.sprite.getHeight()/2
 
-    def move(): Unit
-
     def isDead(): Boolean = this.hp <= 0
 }

@@ -15,7 +15,7 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Float, direction: Di
       this.attack // FIXME Why can't I add ()?
     }
     else {
-      this.move()
+      this.move
     }
   }
 
