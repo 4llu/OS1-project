@@ -9,10 +9,10 @@ object game extends Screen{
 
     private val MS_PER_UPDATE = 13
     
-    val world = new World()
-    val player = new Player(100, 200, this.world)
+    var world:World = null
+    var player:Player = null
 
-    var renderList = new ArrayBuffer[C_Renderable]()
+    var renderList = new ArrayBuffer[C_Drawable]()
     var updateList = new ArrayBuffer[C_Updatable]()
     private var inputList = new ArrayBuffer[(Key.Value, Boolean)]()
 //    updateList += this.player
@@ -20,12 +20,22 @@ object game extends Screen{
     val keysPressed = scala.collection.mutable.Map[Key.Value, Boolean](
         (Key.W, false), (Key.A, false), (Key.S, false), (Key.D, false), (Key.Space, false))
     
-    var cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2
-    var cameraY = player.location.y+player.sprite.getHeight/2-Canvas.height/2
+    var cameraX = 0
+    var cameraY = 0
 
-    def run(worldNum: Int, dif: Difficulty): Unit = {
-        // FIXME Turn worldNum into a world
-        this.init() // FIXME Is this necessary?
+    def init(worldNum: Int, dif: Difficulty) = {
+      world = new World(worldNum)
+      player = new Player(world.width/2, world.height/2, world)
+      
+      cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2
+      cameraY = player.location.y+player.sprite.getHeight/2-Canvas.height/2
+      
+      renderList ++= world.backgroundTiles.flatten
+      renderList ++= world.tiles.flatten.filter(_.tileType != "extension")
+      renderList += player
+    }
+    
+    def run(): Int = {
         
         var previous: Long = System.currentTimeMillis
         var lag = 0.0
@@ -46,7 +56,8 @@ object game extends Screen{
 
             this.draw(lag / MS_PER_UPDATE)
         }
-
+        
+        1
         // TODO Ending screen and return to menu
     }
     def update(timeElapsed: Long): Unit = {
