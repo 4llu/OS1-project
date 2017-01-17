@@ -10,11 +10,12 @@ abstract class Creature(x: Int, y: Int, world: World, val speed: Float, var dire
     var weapon: Weapon
 
     var sprite: BufferedImage
-    
     var location: Location
-    
-    def move(): Unit = {
-    }
+
+    def centerX: Int = this.x + this.sprite.getWidth()/2
+    def centerY: Int = this.y + this.sprite.getHeight()/2
+
+    def move(): Unit
 
     def isDead(): Boolean = this.hp <= 0
 }
