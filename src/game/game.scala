@@ -51,6 +51,8 @@ object game extends Screen{
         var previous: Long = System.currentTimeMillis
         var lag = 0.0
 
+        Sound.playGameMusic()
+
         while (!this.gameEnded) {
             val current = System.currentTimeMillis
             var elapsed = current - previous
@@ -74,7 +76,8 @@ object game extends Screen{
 //            this.draw(lag / MS_PER_UPDATE)
             this.draw(this.MS_PER_UPDATE)
         }
-        
+
+        Sound.stopGameMusic()
         menu
     }
     def update(timeElapsed: Long): Unit = {
