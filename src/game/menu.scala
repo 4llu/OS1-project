@@ -27,6 +27,9 @@ object menu extends Screen {
   this.renderList ++= this.buttons
   
   def run() = {
+
+    Sound.playMenuMusic()
+
     while(buttonsClicked.isEmpty) {
       buttonsClicked = this.buttons.filter (_.clicked)
       this.draw(this.MS_PER_UPDATE)

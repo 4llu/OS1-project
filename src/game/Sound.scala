@@ -24,7 +24,8 @@ object Sound {
   var curGameMusic = this.gameMusic(random.nextInt(this.gameMusic.length))
 
   def playMenuMusic(): Unit = {
-    this.menuMusic.loop(Clip.LOOP_CONTINUOUSLY)
+    if (this.curGameMusic.isActive) this.curGameMusic.stop()
+    if (!this.menuMusic.isActive) this.menuMusic.loop(Clip.LOOP_CONTINUOUSLY)
   }
 
   def stopMenuMusic(): Unit = {
@@ -32,7 +33,8 @@ object Sound {
   }
 
   def playGameMusic(): Unit = {
-    this.curGameMusic.loop(Clip.LOOP_CONTINUOUSLY)
+    if (this.menuMusic.isActive) this.menuMusic.stop()
+    if (!this.curGameMusic.isActive) this.curGameMusic.loop(Clip.LOOP_CONTINUOUSLY)
   }
 
   def stopGameMusic(): Unit = {
