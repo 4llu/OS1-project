@@ -25,10 +25,10 @@ class Location(val x: Int, val y: Int, val width: Int, val height: Int, val worl
     val distance = Math.sqrt(dx*dx+dy*dy)
     
     var i = 1
-    val stepSize = 1
+    val stepSize = 0.5
     while (i <= distance/stepSize && !blocked) {
-      val newLocation = new Location((this.x + direction.xStep*i*stepSize).toInt, 
-          (this.y + direction.yStep*i*stepSize).toInt, this.width, this.height, this.world)
+      val newLocation = new Location((this.x + direction.xStep*i*stepSize+0.5).toInt, 
+          (this.y + direction.yStep*i*stepSize+0.5).toInt, this.width, this.height, this.world)
       if (this.world.isWalkable(newLocation)) {
         resultLocation = newLocation
       } else {

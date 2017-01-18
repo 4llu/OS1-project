@@ -23,7 +23,7 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
   var location = new Location(x, y, sprite.getWidth, sprite.getHeight, world)
       
   def update(timeElapsed: Long): Unit = {
-      var move = true 
+      var playerMoving = true 
       if (game.keysPressed(Key.W) && game.keysPressed(Key.A) && !game.keysPressed(Key.S) && !game.keysPressed(Key.D)) {
         this.direction = NorthWest  
       } else if (game.keysPressed(Key.W) && !game.keysPressed(Key.A) && !game.keysPressed(Key.S) && game.keysPressed(Key.D)) {
@@ -42,10 +42,10 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
       } else if (!game.keysPressed(Key.W) && !game.keysPressed(Key.A) && !game.keysPressed(Key.S) && game.keysPressed(Key.D)) {
           this.direction = East
       } else {
-        move = false
+        playerMoving = false
       }
       
-      if (move) {
+      if (playerMoving) {
         this.location = this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
       }
       

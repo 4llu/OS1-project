@@ -7,8 +7,6 @@ import scala.swing.event._
 
 object game extends Screen{
 
-    private val MS_PER_UPDATE = 13
-    
     var world:World = null
     var player:Player = null
 
@@ -35,7 +33,7 @@ object game extends Screen{
       renderList += player
     }
     
-    def run(): Int = {
+    def run(): Screen = {
         
         var previous: Long = System.currentTimeMillis
         var lag = 0.0
@@ -49,24 +47,19 @@ object game extends Screen{
             player.update(elapsed)
             this.processInput(elapsed)
 
-            while (lag >= MS_PER_UPDATE && !this.gameEnded) {
+            while (lag >= this.MS_PER_UPDATE && !this.gameEnded) {
                 this.update(elapsed)
-                lag -= MS_PER_UPDATE
+                lag -= this.MS_PER_UPDATE
             }
 
-            this.draw(lag / MS_PER_UPDATE)
+//            this.draw(lag / MS_PER_UPDATE)
+            this.draw(this.MS_PER_UPDATE)
         }
         
-        1
-        // TODO Ending screen and return to menu
+        menu
     }
     def update(timeElapsed: Long): Unit = {
         this.updateList.foreach(n => n.update(timeElapsed))
-    }
-
-    def draw(delta: Double): Unit = {
-      Canvas.repaint()
-      Thread.sleep(MS_PER_UPDATE)
     }
 
     def processInput(timeElapsed: Long): Unit = {
@@ -79,14 +72,14 @@ object game extends Screen{
       cameraY = player.location.y+player.sprite.getHeight/2-Canvas.height/2
       inputList.clear()
     }
-
-    def init(): Unit = {
-      
-    }
-
+    
     def gameEnded: Boolean = this.player.isDead
     
     def takeInput(key: Key.Value, pressed: Boolean){
       inputList += ((key, pressed))
+    }
+    
+    def recieveClick(event:MouseClicked) = {
+      
     }
 }

@@ -146,15 +146,11 @@ class World(worldNum: Int) {
   
   def isWalkable(location: Location) = {
     var result = false
-    if (location.x > 0 && location.x < this.width && location.y > 0 && location.y < this.height) {
-      try {
-        result = (tiles(location.x/tileWidth)(location.y/tileHeight).walkable) && 
-               (tiles((location.x+location.width)/tileWidth)(location.y/tileHeight).walkable) && 
-               (tiles(location.x/tileWidth)((location.y+location.height)/tileHeight).walkable) && 
-               (tiles((location.x+location.width)/tileWidth)((location.y+location.height)/tileHeight).walkable)
-      } catch {
-        case e: Exception => result = false
-      }
+    if (location.x > 0 && location.x+location.width < this.width && location.y > 0 && location.y+location.height < this.height) {
+        result = (tiles(location.y/tileHeight)(location.x/tileWidth).walkable) && 
+               (tiles(location.y/tileHeight)((location.x+location.width)/tileWidth).walkable) && 
+               (tiles((location.y+location.height)/tileHeight)(location.x/tileWidth).walkable) && 
+               (tiles((location.y+location.height)/tileHeight)((location.x+location.width)/tileWidth).walkable)
     }
     result
   }
