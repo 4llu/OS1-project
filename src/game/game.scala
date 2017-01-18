@@ -8,8 +8,8 @@ import scala.util.Random
 
 object game extends Screen{
 
-    var world:World = null
-    var player:Player = null
+    var world:World = _
+    var player:Player = _
 
     var renderList = new ArrayBuffer[C_Drawable]()
     var updateList = new ArrayBuffer[C_Updatable]()
@@ -32,7 +32,7 @@ object game extends Screen{
     
     val random = new Random()
 
-    def init(worldNum: Int, dif: Difficulty) = {
+    def init(worldNum: Int, dif: Difficulty): Unit = {
       world = new World(worldNum)
       player = new Player(world.width/2, world.height/2, world)
       
