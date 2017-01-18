@@ -1,7 +1,10 @@
 package game
 
-import java.io.{File, FileInputStream, InputStream}
-import javax.sound.sampled.AudioSystem
+import java.io.File;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 
 import sun.audio.{AudioPlayer, AudioStream}
 
@@ -10,22 +13,10 @@ import sun.audio.{AudioPlayer, AudioStream}
   */
 object Sound extends App {
 
-  var menuMusic = "/"
-  var in = new FileInputStream(menuMusic)
-
-  var audioStream = new AudioStream(in)
-  AudioPlayer.player.start(audioStream);
-
-  // val menuMusic = new File("/media/sounds/Analog-Nostalgia.waw")
-  // val menuMusic = new File("/Users/Aleksanteri/Documents/GitHub/OS1-project/media/sounds/Analog-Nostalgia.waw")
-  // val audioIn = AudioSystem.getAudioInputStream(menuMusic)
-  // println("asd")
-  // val clip = AudioSystem.getClip
-  // clip.open(audioIn)
-  // clip.start()
-
-  // def playGameMusic(): Unit = ???
-
-  // def playMenuMusic(): Unit = ???
-
+  var VOLUME_DB = -10.0f
+  val audioInputStream: AudioInputStream = AudioSystem.getAudioInputStream(new File("media/sounds/Analog-Nostalgia.wav").getAbsoluteFile());
+  val clip = AudioSystem.getClip();
+  clip.open(audioInputStream);
+  clip.getControl(FloatControl.Type.MASTER_GAIN).asInstanceOf[FloatControl].setValue(VOLUME_DB);
+  clip.start();
 }
