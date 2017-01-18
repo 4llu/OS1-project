@@ -9,6 +9,8 @@ abstract class Screen() {
     
   var buttons: ArrayBuffer[Button]
   
+  var buttonsClicked = ArrayBuffer[Button]()
+  
   var renderList: ArrayBuffer[C_Drawable]
   def run(): Screen
   

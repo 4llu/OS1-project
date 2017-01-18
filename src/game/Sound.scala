@@ -16,12 +16,12 @@ object Sound {
 
   var VOLUME_DB: Float = -10.0f
 
+  val random = new Random()
+
   val menuMusic: Clip = this.getSound("Analog-Nostalgia")
   val gameMusic: ArrayBuffer[Clip] = ArrayBuffer[Clip]()
-  this.gameMusic += this.getSound("Theyre-Closing_In")
+  this.gameMusic += this.getSound("Theyre-Closing-In")
   var curGameMusic = this.gameMusic(random.nextInt(this.gameMusic.length))
-
-  val random = new Random()
 
   def playMenuMusic(): Unit = {
     this.menuMusic.loop(Clip.LOOP_CONTINUOUSLY)

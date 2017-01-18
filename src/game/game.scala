@@ -82,7 +82,8 @@ object game extends Screen{
     }
     def update(timeElapsed: Long): Unit = {
       this.updateList.foreach(_.update(timeElapsed))
-      this.updateList = this.updateList.filter(_.remove)
+      this.updateList = this.updateList.filter(!_.remove)
+      this.renderList = this.renderList.filter(!_.remove)
     }
 
     def processInput(timeElapsed: Long): Unit = {

@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage
   */
 trait C_Drawable extends C_Locatable {
     var sprite: BufferedImage
+    var remove = false
 
     // TODO Sprite list for different actions
 }

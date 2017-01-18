@@ -45,12 +45,12 @@ class Portal(tile:Tile, waveNumber:Int, difficulty:Difficulty) extends C_Drawabl
       this.sprite = if (spriteNumber == 0) portal1Sprite else portal2Sprite
       spriteNumber = (spriteNumber+1)%2
     }
-    
     if (spawnCooldown > 0) {
       spawnCooldown -= timeElapsed/1000.0
     } else if (!monstersToSpawn.isEmpty){
       spawnCooldown = baseSpawnCooldown + game.random.nextDouble()*0.2-0.1
       game.addMonster(monstersToSpawn(0))
+      println("new monster")
       monstersToSpawn = monstersToSpawn.tail
     }
   }
