@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage
 class World(worldNum: Int) {
   
   private val groundTileSet = ImageIO.read(new File("media/ground_tiles.png"))
-  private val objectTileSet = ImageIO.read(new File("media/object- layer.png"))
+  private val objectTileSet = ImageIO.read(new File("media/object_layer.png"))
   private val cliffTileSet = ImageIO.read(new File("media/Cliff_tileset.png"))
   private val grassImage = groundTileSet.getSubimage(32, 64, 64, 64)
   private val flowers = objectTileSet.getSubimage(352, 32, 32, 32)
