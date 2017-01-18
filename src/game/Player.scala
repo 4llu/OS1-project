@@ -10,17 +10,18 @@ import java.io.File
 import javax.imageio.ImageIO
 import scala.swing.event.Key
 
-class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, world: World, 1.0f, South, 100) {
+class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, world: World, 0.2, 100) {
   val maxMana = 100
   var mana = this.maxMana
   val weapons = Buffer(new FireballSpell())
   var curWeapon = 0
-  var weapon: Weapon = null
-  this.weapon = this.weapons(this.curWeapon)
+  var weapon: Weapon = this.weapons(this.curWeapon)
 
   var sprite = ImageIO.read(new File("media/player.png"))
   
   var location = new Location(x, y, sprite.getWidth, sprite.getHeight, world)
+  
+  var direction:Direction = South
       
   def update(timeElapsed: Long): Unit = {
       var playerMoving = true 

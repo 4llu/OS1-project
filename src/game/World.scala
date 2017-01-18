@@ -19,10 +19,14 @@ class World(worldNum: Int) {
   private val cliffDownImage = Canvas.combineImages(grassImage, cliffDown, false)
   private val cliffUp = cliffTileSet.getSubimage(96, 0, 64, 64)
   private val cliffUpImage = Canvas.combineImages(grassImage, cliffUp, true)
+  private val cliffLeft = cliffTileSet.getSubimage(32, 64, 64, 64)
+  private val cliffLeftImage = Canvas.combineImages(grassImage, cliffLeft, true)
+  private val cliffRight = cliffTileSet.getSubimage(160, 64, 64, 64)
+  private val cliffRightImage = Canvas.combineImages(grassImage, cliffRight, true)
   
   val backgroundImage = grassImage
   
-  private val map = ArrayBuffer(  
+  val map = ArrayBuffer(  
     "U+U+U+U+U+U+U+U+U+U+U+U+U+U+U+U+U+",  
     "++++++++++++++++++++++++++++++++++",  
     "B+,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.B+",  // B+
