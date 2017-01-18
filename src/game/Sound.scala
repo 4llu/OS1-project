@@ -14,13 +14,11 @@ import scala.util.Random;
   */
 object Sound {
 
-  var VOLUME_DB: Float = -10.0f
-
   val random = new Random()
 
-  val menuMusic: Clip = this.getSound("Analog-Nostalgia")
+  val menuMusic: Clip = this.getSound("menu_music", -10.0f)
   val gameMusic: ArrayBuffer[Clip] = ArrayBuffer[Clip]()
-  this.gameMusic += this.getSound("Theyre-Closing-In")
+  this.gameMusic += this.getSound("game_music_1", -10.0f)
   var curGameMusic = this.gameMusic(random.nextInt(this.gameMusic.length))
 
   def playMenuMusic(): Unit = {
@@ -41,11 +39,15 @@ object Sound {
     this.curGameMusic.stop()
   }
 
-  def getSound(soundName: String): Clip = {
+  def playSoundEffect(name: String): Unit = {
+    this.getSound(name, -20.0f).start()
+  }
+
+  def getSound(soundName: String, volumeDB: Float): Clip = {
     val audioInputStream: AudioInputStream = AudioSystem.getAudioInputStream(new File("media/sounds/" + soundName + ".wav").getAbsoluteFile());
     val clip = AudioSystem.getClip();
     clip.open(audioInputStream);
-    clip.getControl(FloatControl.Type.MASTER_GAIN).asInstanceOf[FloatControl].setValue(VOLUME_DB);
+    clip.getControl(FloatControl.Type.MASTER_GAIN).asInstanceOf[FloatControl].setValue(volumeDB);
     clip
   }
 }
