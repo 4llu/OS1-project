@@ -17,7 +17,7 @@ class Location(val x: Int, val y: Int, val width: Int, val height: Int, val worl
         dx <= distance && dy <= distance
     }
     
-  def moveUntilBlocked(direction: Direction, speed: Float, timeElapsed: Long) = {
+  def moveUntilBlocked(direction: Direction, speed: Double, timeElapsed: Long) = {
     val dx = direction.xStep*speed*timeElapsed
     val dy = direction.yStep*speed*timeElapsed
     var resultLocation = this

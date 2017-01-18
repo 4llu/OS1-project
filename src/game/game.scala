@@ -4,6 +4,7 @@ import scala.swing._
 import scala.collection.mutable.ArrayBuffer
 import java.awt.event._
 import scala.swing.event._
+import scala.util.Random
 
 object game extends Screen{
 
@@ -12,6 +13,7 @@ object game extends Screen{
 
     var renderList = new ArrayBuffer[C_Drawable]()
     var updateList = new ArrayBuffer[C_Updatable]()
+    var monsterList = new ArrayBuffer[Monster]()
     private var inputList = new ArrayBuffer[(Key.Value, Boolean)]()
 //    updateList += this.player
     
@@ -20,6 +22,13 @@ object game extends Screen{
     
     var cameraX = 0
     var cameraY = 0
+    
+    var waveNumber = 0
+    var difficulty: Difficulty = _
+    
+    var waveOngoing = false
+    
+    val random = new Random()
 
     def init(worldNum: Int, dif: Difficulty) = {
       world = new World(worldNum)
@@ -31,6 +40,8 @@ object game extends Screen{
       renderList ++= world.backgroundTiles.flatten
       renderList ++= world.tiles.flatten.filter(_.tileType != "extension")
       renderList += player
+      
+      this.difficulty = dif
     }
     
     def run(): Screen = {
@@ -46,6 +57,12 @@ object game extends Screen{
 
             player.update(elapsed)
             this.processInput(elapsed)
+            
+            if (this.monsterList.isEmpty && !waveOngoing) {
+              this.waveOngoing = true
+              this.waveNumber += 1
+              startWave()
+            }
 
             while (lag >= this.MS_PER_UPDATE && !this.gameEnded) {
                 this.update(elapsed)
@@ -81,5 +98,27 @@ object game extends Screen{
     
     def recieveClick(event:MouseClicked) = {
       
+    }
+    
+    def startWave() = {
+      if (this.monsterList.isEmpty) {
+        val portalCount = if (this.waveNumber < 5) 2 else 3 
+        var portals = 0
+        while(portals < portalCount){
+          val x = random.nextInt(this.world.map(0).length)
+          val y = random.nextInt(this.world.map.size)
+          if (this.world.tiles(y)(x).walkable) {
+            val portal = new Portal(this.world.tiles(y)(x), this.waveNumber, this.difficulty)
+            this.renderList += portal
+            this.updateList += portal
+            portals += 1
+          }
+        }
+      }
+    }
+    def addMonster(monster:Monster) = {
+        game.renderList += monster
+        game.updateList += monster
+        game.monsterList += monster
     }
 }

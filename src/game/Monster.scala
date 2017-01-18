@@ -1,15 +1,20 @@
 package game
 
 import scala.collection.mutable.ArrayBuffer
+import java.awt.image.BufferedImage
+import java.awt.image.BufferedImage
 
 /**
   * Created by Allu on 11/11/2016.
   */
-abstract class Monster(x: Int, y: Int, world: World, speed: Float, dir: Direction, maxHp: Int, val points: Int, val range: Int = 1)
-        extends Creature(x: Int, y: Int, world: World, speed, dir, maxHp) {
+abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, val points: Int, val range: Int = 1)
+        extends Creature(x: Int, y: Int, world: World, speed, maxHp) {
 
   var weapon: Weapon
+  var direction: Direction
 
+  var sprite: BufferedImage
+  
   def update(timeElapsed: Long): Unit = {
     // TODO If close enough to attack / not close enough to attack
     if (math.hypot(game.player.centerX - this.centerX, game.player.centerY - this.centerY) <= range) {
@@ -19,21 +24,26 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Float, dir: Directio
       this.move(timeElapsed)
     }
   }
-
-  def move(timeElapsed: Long): Unit = {
+  
+  def playerDirection():Direction = {
     val dx = game.player.centerX - this.centerX
     val dy = game.player.centerY - this.centerY
+    
+    if (dx > 0 && dy > 0) SouthEast
+    else if (dx < 0 && dy > 0) SouthWest
+    else if (dx > 0 && dy < 0) NorthEast
+    else if (dx < 0 && dy < 0) NorthWest
+    else if (dx == 0 && dy < 0) North
+    else if (dx == 0 && dy > 0) South
+    else if (dx > 0 && dy == 0) East
+    else West
+    
+  }
 
-    if (dx > dy && dx >= 0) this.direction = East
-    else if (dx > dy && dx < 0) this.direction = West
-    else if (dy > dx && dy >= 0) this.direction = South
-    else if (dy > dx && dy < 0) this.direction = North
-    else if (dx >= 0 && dy >= 0) this.direction = SouthEast
-    else if (dx < 0 && dy >= 0) this.direction = SouthWest
-    else if (dx >= 0 && dy < 0) this.direction = NorthEast
-    else if (dx < 0 && dy < 0) this.direction = NorthWest
+  def move(timeElapsed: Long): Unit = {
+    this.direction = this.playerDirection()
 
-    this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
+    this.location = this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
   }
 
   def attack(): ArrayBuffer[Projectile] = {
