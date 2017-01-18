@@ -17,6 +17,8 @@ object game extends Screen{
     private var inputList = new ArrayBuffer[(Key.Value, Boolean)]()
 //    updateList += this.player
     
+    var buttons = ArrayBuffer[Button]()
+    
     val keysPressed = scala.collection.mutable.Map[Key.Value, Boolean](
         (Key.W, false), (Key.A, false), (Key.S, false), (Key.D, false), (Key.Space, false))
     
@@ -94,10 +96,6 @@ object game extends Screen{
     
     def takeInput(key: Key.Value, pressed: Boolean){
       inputList += ((key, pressed))
-    }
-    
-    def recieveClick(event:MouseClicked) = {
-      
     }
     
     def startWave() = {

@@ -15,11 +15,14 @@ object Canvas extends Component {
   
   focusable = true
   listenTo(mouse.clicks)
+  listenTo(mouse.moves)
   listenTo(keys)
   
   reactions += {
     case clickEvent: MouseClicked => 
       currentScreen.recieveClick(clickEvent)
+    case moveEvent: MouseMoved =>
+      currentScreen.recieveMouseMovement(moveEvent)
       
     case KeyPressed(_, key, _, _) => 
       if (currentScreen == game) {

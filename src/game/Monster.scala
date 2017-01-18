@@ -12,8 +12,10 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
 
   var weapon: Weapon
   var direction: Direction
-
+  
   var sprite: BufferedImage
+  
+  var moving = false
   
   def update(timeElapsed: Long): Unit = {
     // TODO If close enough to attack / not close enough to attack
@@ -42,8 +44,9 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
 
   def move(timeElapsed: Long): Unit = {
     this.direction = this.playerDirection()
-
-    this.location = this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
+    this.moving = true
+    this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
+    this.moving = false
   }
 
   def attack(): ArrayBuffer[Projectile] = {

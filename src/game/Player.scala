@@ -47,7 +47,7 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
       }
       
       if (playerMoving) {
-        this.location = this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
+        this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
       }
       
       if (game.keysPressed(Key.Space)) {
