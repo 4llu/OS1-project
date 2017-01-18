@@ -29,7 +29,7 @@ class Location(var x: Int, var y: Int, val width: Int, val height: Int, val worl
       val newLocation = new Location((this.x + direction.xStep*i*stepSize+0.5).toInt, 
           (this.y + direction.yStep*i*stepSize+0.5).toInt, this.width, this.height, this.world)
       for (monster <- game.monsterList.filter(!_.moving)) {
-        if (newLocation.overlapsWith(monster.location)) blocked = true
+        if (!this.overlapsWith(monster.location) && newLocation.overlapsWith(monster.location)) blocked = true
       }
       if (this.world.isWalkable(newLocation) && !blocked) {
         resultLocation = newLocation
