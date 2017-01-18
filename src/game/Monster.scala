@@ -7,19 +7,16 @@ import java.awt.image.BufferedImage
 /**
   * Created by Allu on 11/11/2016.
   */
-abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, val points: Int, val range: Int = 1)
+abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, val points: Int, var range: Int = 1)
         extends Creature(x: Int, y: Int, world: World, speed, maxHp) {
 
   var weapon: Weapon
   var direction: Direction
   
-  var sprite: BufferedImage
-  
   var moving = false
   
   def update(timeElapsed: Long): Unit = {
-    // TODO If close enough to attack / not close enough to attack
-    if (math.hypot(game.player.centerX - this.centerX, game.player.centerY - this.centerY) <= range) {
+    if (math.hypot(game.player.centerX - this.centerX, game.player.centerY - this.centerY) <= range+this.spriteOffset) {
       this.attack()
     }
     else {
@@ -49,7 +46,18 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
     this.moving = false
   }
 
-  def attack(): ArrayBuffer[Projectile] = {
+  def attack() = {
     this.weapon.fire(this.location.x, this.location.y, this.world, this.direction)
+  }
+  
+  def spriteOffset() = {
+    if (this.direction == North || this.direction == South) {
+      this.sprite.getHeight/2+game.player.sprite.getHeight/2
+    } else if (this.direction == West || this.direction == East) {
+      this.sprite.getWidth/2+game.player.sprite.getWidth/2
+    } else {
+      Math.hypot(this.sprite.getWidth/2.0, this.sprite.getHeight/2)+
+      Math.hypot(game.player.sprite.getWidth/2.0, game.player.sprite.getHeight/2)
+    }
   }
 }
