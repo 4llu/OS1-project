@@ -14,15 +14,39 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
   var direction: Direction
   
   var moving = false
+  var died = 0L
+  val deathAnimationLength: Int
   
   def update(timeElapsed: Long): Unit = {
-    if (math.hypot(game.player.centerX - this.centerX, game.player.centerY - this.centerY) <= range+this.spriteOffset) {
-      this.attack()
+    // Update normally
+    if (!this.isDead) {
+      // In attack range
+      if (math.hypot(game.player.centerX - this.centerX, game.player.centerY - this.centerY) <= range+this.spriteOffset) {
+        this.attack()
+      }
+      // Move towards player
+      else {
+        this.move(timeElapsed)
+        this.walkAnimation(timeElapsed)
+      }
     }
+    // Dead, but playing the death animation
     else {
-      this.move(timeElapsed)
-      this.walkAnimation(timeElapsed)
+      // Just died
+      if (this.died == 0) {
+        this.died = System.currentTimeMillis
+        game.points += this.points * game.combo
+      }
+      // Death animation complete
+      else if (System.currentTimeMillis - this.died > this.deathAnimationLength*1000) {
+        this.remove = true  
+      }
+      // Playing death animation
+      else {
+        // TODO Run death animation
+      }
     }
+    
   }
   
   def playerDirection():Direction = {

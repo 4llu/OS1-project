@@ -21,3 +21,4 @@ project/plugins/project/
 .project
 /OS1-project.iml
 /bin/
+.cache-main

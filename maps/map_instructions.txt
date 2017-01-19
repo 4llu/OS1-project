@@ -1,0 +1,20 @@
+Tiles (1x1) are 32px x 32px
+
+// Empties
+. Empty walkable tile
++ Empty non walkable tile
+
+// Ground
+, Grass (2x2)
+
+// Cliffs
+U Cliff facing upwards (2x2)
+D Cliff facing downwards (2x3)
+L Cliff facing left (2x2)
+R Cliff facing right (2x2)
+
+// Obstacles
+B Bush (2X2)
+
+// Decoration (no background, must be placed on top of a ground tile)
+f Flower
