@@ -62,6 +62,18 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
     this.playerMoving = false
   }
 
+  def nextWeapon(): Unit = {
+    this.curWeapon += 1
+    if (this.curWeapon == this.weapons.length) this.curWeapon = 0
+    this.weapon = this.weapons(this.curWeapon)
+  }
+
+  def previousWeapon(): Unit = {
+    this.curWeapon -= 1
+    if (this.curWeapon == -1) this.curWeapon = this.weapons.length - 1
+    this.weapon = this.weapons(this.curWeapon)
+  }
+
   /* Load and separate player sprites */
   def loadSprites() = {
     val playerSprites = ImageIO.read(new File("media/player_sprites.png"))
