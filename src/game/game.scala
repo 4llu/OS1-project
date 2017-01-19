@@ -10,12 +10,17 @@ object game extends Screen{
 
     var world:World = _
     var player:Player = _
+    
+    var points = 0
+    var pointsPrevious = 0
+    var combo = 1
+    val comboResetTime = (4.0 * 1000).toInt
+    var enemyLastKilled = 0L
 
     var renderList = new ArrayBuffer[C_Drawable]()
     var updateList = new ArrayBuffer[C_Updatable]()
     var monsterList = new ArrayBuffer[Monster]()
     private var inputList = new ArrayBuffer[(Key.Value, Boolean)]()
-//    updateList += this.player
     
     var buttons = ArrayBuffer[Button]()
     
@@ -81,9 +86,20 @@ object game extends Screen{
         menu
     }
     def update(timeElapsed: Long): Unit = {
+      // Update lists
       this.updateList.foreach(_.update(timeElapsed))
       this.updateList = this.updateList.filter(!_.remove)
       this.renderList = this.renderList.filter(!_.remove)
+      // Update combo counter
+      val curTime = System.currentTimeMillis() 
+      if (this.points != this.pointsPrevious) {
+        this.combo += 1
+        this.enemyLastKilled = curTime
+      }
+      // Reset combo
+      else if (this.combo != 1 && curTime - this.enemyLastKilled > this.comboResetTime) {
+        this.combo = 1
+      }
     }
 
     def processInput(timeElapsed: Long): Unit = {

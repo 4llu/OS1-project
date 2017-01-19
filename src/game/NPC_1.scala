@@ -12,6 +12,7 @@ import scala.collection.mutable.ArrayBuffer
 class NPC_1(x:Int, y:Int, world:World) extends Monster(x:Int, y:Int, world:World, 0.1, 10, 32) {
   var weapon: Weapon = new FireballSpell(); // FIXME Wrong weapon
   var sprite: BufferedImage = ImageIO.read(new File("media/player.png")) // FIXME Wrong sprite
+  val deathAnimationLength = (1.0 * 1000).toInt
   
   var location = new Location(x, y, sprite.getWidth, sprite.getHeight, world)
   var direction = this.playerDirection()
