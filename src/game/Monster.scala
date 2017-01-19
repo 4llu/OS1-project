@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage
   * Created by Allu on 11/11/2016.
   */
 abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, val points: Int, var range: Int = 1)
-        extends Creature(x: Int, y: Int, world: World, speed, maxHp) {
+        extends Creature(x: Int, y: Int, world: World, speed, (maxHp*game.difficulty.hpMod).toInt) {
 
   var weapon: Weapon
   var direction: Direction

@@ -16,13 +16,13 @@ class Fireball(x:Int, y:Int, world:World, var direction: Direction) extends Proj
   var location = new Location(x, y, sprite.getWidth, sprite.getHeight, world)
 
   override def update(timeElapsed: Long): Unit = {
-    super.update(timeElapsed)
+//    super.update(timeElapsed)
+    this.blocked = this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
 
     // FIXME Optimize
     // FIXME Can this be generalized to projectiles somehow
     if (this.blocked) {
       val loop = new Breaks
-      println(game.monsterList.length)
       loop.breakable {
         for (monster <- game.monsterList) {
           if (this.location.overlapsWith(monster.location)) {
