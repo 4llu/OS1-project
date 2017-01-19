@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage
   */
 abstract class Creature(x: Int, y: Int, world: World, val speed: Double, val maxHp: Int) extends C_Updatable with C_Drawable {
     var hp = maxHp
-    var weapon: Weapon
+    var weapon: Spell
 
     var sprite: BufferedImage
     var location: Location

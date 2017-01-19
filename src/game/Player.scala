@@ -11,7 +11,7 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
   var mana = this.maxMana
   val weapons = Buffer(new FireballSpell())
   var curWeapon = 0
-  var weapon: Weapon = this.weapons(this.curWeapon)
+  var weapon: Spell = this.weapons(this.curWeapon)
 
   this.loadSprites()
   

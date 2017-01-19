@@ -24,11 +24,11 @@ class Portal(tile:Tile, waveNumber:Int, difficulty:Difficulty) extends C_Drawabl
   
   if (waveNumber < 5) {
     for (i <- 0 to waveNumber*2+1) {
-      monstersToSpawn += new NPC_1(this.location.x, this.location.y, this.location.world)
+      monstersToSpawn += new Penguin(this.location.x, this.location.y, this.location.world)
     }
   } else if (waveNumber < 10) {
     for (i <- 0 to waveNumber) {
-      monstersToSpawn += new NPC_1(this.location.x, this.location.y, this.location.world)
+      monstersToSpawn += new Penguin(this.location.x, this.location.y, this.location.world)
     }
 //    for (i <- 0 to waveNumber*2) {
 //      game.addMonster(new NPC_2(this.location.x, this.location.y, this.location.world))
