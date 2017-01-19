@@ -104,18 +104,16 @@ object game extends Screen{
     }
     
     def startWave() = {
-      if (this.monsterList.isEmpty) {
-        val portalCount = if (this.waveNumber < 5) 2 else 3 
-        var portals = 0
-        while(portals < portalCount){
-          val x = random.nextInt(this.world.map(0).length)
-          val y = random.nextInt(this.world.map.size)
-          if (this.world.tiles(y)(x).walkable) {
-            val portal = new Portal(this.world.tiles(y)(x), this.waveNumber, this.difficulty)
-            this.renderList += portal
-            this.updateList += portal
-            portals += 1
-          }
+      val portalCount = if (this.waveNumber < 5) 2 else 3 
+      var portals = 0
+      while(portals < portalCount){
+        val x = random.nextInt(this.world.map(0).length)
+        val y = random.nextInt(this.world.map.size)
+        if (this.world.tiles(y)(x).walkable) {
+          val portal = new Portal(this.world.tiles(y)(x), this.waveNumber, this.difficulty)
+          this.renderList += portal
+          this.updateList += portal
+          portals += 1
         }
       }
     }

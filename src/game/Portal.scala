@@ -50,7 +50,6 @@ class Portal(tile:Tile, waveNumber:Int, difficulty:Difficulty) extends C_Drawabl
     } else if (!monstersToSpawn.isEmpty){
       spawnCooldown = baseSpawnCooldown + game.random.nextDouble()*0.2-0.1
       game.addMonster(monstersToSpawn(0))
-      println("new monster")
       monstersToSpawn = monstersToSpawn.tail
     }
   }
