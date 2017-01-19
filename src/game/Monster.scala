@@ -14,7 +14,7 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
   var direction: Direction
   
   var moving = false
-  var died = 0L
+  var died = 0L // Time of death (for death animation)
   val deathAnimationLength: Int
   
   def update(timeElapsed: Long): Unit = {
@@ -59,7 +59,7 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
   def attack(): Unit = {
     this.weapon.fire(this.location.x, this.location.y, this.world, this.direction)
   }
-  
+
   def playerDirection():Direction = {
     val dx = game.player.centerX - this.centerX
     val dy = game.player.centerY - this.centerY

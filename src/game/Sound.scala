@@ -24,6 +24,7 @@ object Sound {
   val menuMusic: Clip = this.getSound("menu_music", -10.0f)
   val gameMusic: Clip = this.getSound("game_music_1", -10.0f)
 
+  /* Start menu music if not playing yet. Also stop game music if it's playing. */
   def playMenuMusic(): Unit = {
     if (!this.muteMusic) {
       this.stopGameMusic()
@@ -35,6 +36,7 @@ object Sound {
     if (this.menuMusic.isActive) this.menuMusic.stop()
   }
 
+  /* Start game music if not playing yet. Also stop menu music if it's playing. */
   def playGameMusic(): Unit = {
     if (!this.muteMusic) {
       this.stopMenuMusic()
@@ -46,8 +48,9 @@ object Sound {
     if (this.gameMusic.isActive) this.gameMusic.stop()
   }
 
+  /* Play SFX with the given name. Name must be the same as the SFX filename without the filename extension */
   def playSoundEffect(name: String): Unit = {
-    if (!this.muteSfx) this.getSound(name, -20.0f).start()
+    if (!this.muteSfx) this.getSound("sfx/" + name, -20.0f).start()
   }
 
   /* Get a sound clip by name */
