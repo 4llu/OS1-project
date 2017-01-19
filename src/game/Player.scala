@@ -7,8 +7,6 @@ import scala.swing.event.Key
 import java.awt.image.BufferedImage
 
 class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, world: World, 0.2, 100) {
-  val maxMana = 100
-  var mana = this.maxMana
   val weapons = Buffer(new FireballSpell())
   var curWeapon = 0
   var weapon: Spell = this.weapons(this.curWeapon)
