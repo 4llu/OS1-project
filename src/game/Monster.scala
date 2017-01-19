@@ -60,10 +60,6 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
     this.weapon.fire(this.location.x, this.location.y, this.world, this.direction)
   }
   
-  def takeDamage(damage: Int): Unit = {
-    this.hp -= damage
-  }
-  
   def playerDirection():Direction = {
     val dx = game.player.centerX - this.centerX
     val dy = game.player.centerY - this.centerY

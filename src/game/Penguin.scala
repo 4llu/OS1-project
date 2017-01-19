@@ -9,8 +9,8 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * Created by Allu on 17/01/2017.
   */
-class Penguin(x:Int, y:Int, world:World) extends Monster(x:Int, y:Int, world:World, 0.1, 10, 32) {
-  var weapon: Spell = new FireballSpell(); // FIXME Wrong weapon
+class Penguin(x:Int, y:Int, world:World) extends Monster(x:Int, y:Int, world:World, 0.1, 100, 32) {
+  var weapon: Spell = new MeleeSpell(30); // FIXME Wrong weapon
   
   this.loadSprites()
   var sprite = spritesByDirection.get(South).get(1)

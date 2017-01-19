@@ -23,18 +23,17 @@ class Portal(tile:Tile, waveNumber:Int, difficulty:Difficulty) extends C_Drawabl
   private var monstersToSpawn = ArrayBuffer[Monster]()
   
   if (waveNumber < 5) {
-    for (i <- 0 to waveNumber*2+1) {
+    for (i <- 0 until (waveNumber*1.5+1).toInt) {
       monstersToSpawn += new Penguin(this.location.x, this.location.y, this.location.world)
     }
   } else if (waveNumber < 10) {
-    for (i <- 0 to waveNumber) {
+    for (i <- 0 until (waveNumber * 0.75 + 1).toInt) {
       monstersToSpawn += new Penguin(this.location.x, this.location.y, this.location.world)
     }
-//    for (i <- 0 to waveNumber*2) {
-//      game.addMonster(new NPC_2(this.location.x, this.location.y, this.location.world))
-//    }
   } else {
-    
+      for (i <- 0 until (waveNumber * 0.5 + 1).toInt) {
+        monstersToSpawn += new Penguin(this.location.x, this.location.y, this.location.world)
+      }
   }
   
   def update(timeElapsed:Long) = {
