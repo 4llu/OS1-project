@@ -22,13 +22,13 @@ class NPC_1(x:Int, y:Int, world:World) extends Monster(x:Int, y:Int, world:World
   val baseSpriteChangeCooldown = 0.1
       
   def loadSprites() = {
-    val goblinSprites = ImageIO.read(new File("media/goblin1Walk.png"))
+    val penguinSprites = ImageIO.read(new File("media/penguin.png"))
     val directions = Vector[Direction](
-         South, SouthWest, West, NorthWest, North, NorthEast, East, SouthEast)
+         South, SouthEast, East, NorthEast, North, NorthWest, West, SouthWest)
     for (y <- 0 to 7) {
       val sprites = ArrayBuffer[BufferedImage]()
-      for (x <- 0 until 720 by 120) {
-        sprites += goblinSprites.getSubimage(x, y*165, 120, 165)
+      for (x <- 0 until 164 by 41) {
+        sprites += penguinSprites.getSubimage(x, y*42, 41, 42)
       }
       spritesByDirection += directions(y) -> sprites.toVector
     }
