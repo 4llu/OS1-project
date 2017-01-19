@@ -10,10 +10,10 @@ class Location(var x: Int, var y: Int, val width: Int, val height: Int, val worl
   }
     
   def overlapsWith(other: Location) = {
-    ((this.x < other.x && this.x + this.width > other.x) ||
-    (other.x < this.x && other.x + other.width > this.x)) &&
-    ((this.y < other.y && this.y + this.height > other.y) ||
-    (other.y < this.y && other.y + other.height > this.y))
+    this.x < other.x + other.width &&
+    x + this.width > other.x &&
+    y < other.y + other.height &&
+    this.y + this.height > other.y
   }
     
   def moveUntilBlocked(direction: Direction, speed: Double, timeElapsed: Long):Boolean = {

@@ -9,6 +9,7 @@ abstract class Projectile(x:Int, y:Int, world:World) extends C_Locatable with C_
   var direction: Direction
   var speed: Float
   var blocked = false
+  val damage: Int
   
   def update(timeElapsed: Long): Unit = {
     this.blocked = this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)

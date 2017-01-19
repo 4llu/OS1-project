@@ -48,6 +48,21 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
     }
     
   }
+
+  def move(timeElapsed: Long): Unit = {
+    this.direction = this.playerDirection()
+    this.moving = true
+    this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
+    this.moving = false
+  }
+
+  def attack(): Unit = {
+    this.weapon.fire(this.location.x, this.location.y, this.world, this.direction)
+  }
+  
+  def takeDamage(damage: Int): Unit = {
+    this.hp -= damage
+  }
   
   def playerDirection():Direction = {
     val dx = game.player.centerX - this.centerX
@@ -62,17 +77,6 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
     else if (dx > 0 && dy == 0) East
     else West
     
-  }
-
-  def move(timeElapsed: Long): Unit = {
-    this.direction = this.playerDirection()
-    this.moving = true
-    this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
-    this.moving = false
-  }
-
-  def attack() = {
-    this.weapon.fire(this.location.x, this.location.y, this.world, this.direction)
   }
   
   def spriteOffset() = {

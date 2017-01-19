@@ -17,7 +17,7 @@ class NPC_1(x:Int, y:Int, world:World) extends Monster(x:Int, y:Int, world:World
   var location = new Location(x, y, sprite.getWidth, sprite.getHeight, world)
   var direction = this.playerDirection()
   
-  val deathAnimationLength = (1.0 * 1000).toInt
+  val deathAnimationLength = 0
   
   val baseSpriteChangeCooldown = 0.1
       

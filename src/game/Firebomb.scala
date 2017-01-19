@@ -8,8 +8,9 @@ import javax.imageio.ImageIO
   * Created by Allu on 18/01/2017.
   */
 class Firebomb(x:Int, y:Int, world:World, var direction: Direction) extends Projectile(x, y, world) {
-  var sprite: BufferedImage = ImageIO.read(new File("media/fireball.png"))
   var speed = 1.0f
+  val damage = 30
+  var sprite: BufferedImage = ImageIO.read(new File("media/fireball.png"))
   var location = new Location(x, y, sprite.getWidth, sprite.getHeight, world)
 
   val timeFired = System.currentTimeMillis()
