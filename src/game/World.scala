@@ -7,7 +7,8 @@ import java.awt.image.BufferedImage
 import scala.io.Source
 
 class World(worldNum: Int) {
-  
+  // Load tile sprites
+
   private val groundTileSet = ImageIO.read(new File("media/ground_tiles.png"))
   private val objectTileSet = ImageIO.read(new File("media/object_layer.png"))
   private val cliffTileSet = ImageIO.read(new File("media/cliff_tileset.png"))
@@ -16,7 +17,7 @@ class World(worldNum: Int) {
   private val flowersImage = Canvas.combineImages(grassImage, flowers, true)
   private val bush = objectTileSet.getSubimage(160, 64, 64, 64)
   private val bushImage = Canvas.combineImages(grassImage, bush, true)
-  // Cliffs sides
+  // Cliff sides
   private val cliffDown = cliffTileSet.getSubimage(96, 128, 64, 96)
   private val cliffDownImage = Canvas.combineImages(grassImage, cliffDown, false)
   private val cliffUp = cliffTileSet.getSubimage(96, 0, 64, 64)
@@ -36,12 +37,14 @@ class World(worldNum: Int) {
   private val cliffDownLeftImage = Canvas.combineImages(grassImage, cliffDownLeft, false)
 
   val backgroundImage = grassImage
-    
+
+  // Read map from text file
   val mapSource = Source.fromFile("maps/map" + worldNum + ".txt")
   val map = ArrayBuffer[String]()
   for (line <- mapSource.getLines()) {
     map += line
   }
+  mapSource.close()
     
   private val tileWidth = 32
   private val tileHeight = 32
