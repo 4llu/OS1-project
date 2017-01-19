@@ -12,6 +12,7 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
   val weapons = Buffer(new FireballSpell())
   var curWeapon = 0
   var weapon: Spell = this.weapons(this.curWeapon)
+  var playerMoving = false
 
   this.loadSprites()
   
@@ -22,7 +23,7 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
   val baseSpriteChangeCooldown = 0.1
       
   def update(timeElapsed: Long): Unit = {
-      var playerMoving = true 
+      this.playerMoving = true
       if (game.keysPressed(Key.W) && game.keysPressed(Key.A) && !game.keysPressed(Key.S) && !game.keysPressed(Key.D)) {
         this.direction = NorthWest  
       } else if (game.keysPressed(Key.W) && !game.keysPressed(Key.A) && !game.keysPressed(Key.S) && game.keysPressed(Key.D)) {
@@ -31,7 +32,6 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
         this.direction = SouthEast
       } else if (!game.keysPressed(Key.W) && game.keysPressed(Key.A) && game.keysPressed(Key.S) && !game.keysPressed(Key.D)) {
         this.direction = SouthWest
-              
       } else if (game.keysPressed(Key.W) && !game.keysPressed(Key.A) && !game.keysPressed(Key.S) && !game.keysPressed(Key.D)) {
           this.direction = North
       } else if (!game.keysPressed(Key.W) && game.keysPressed(Key.A) && !game.keysPressed(Key.S) && !game.keysPressed(Key.D)) {
@@ -41,12 +41,12 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
       } else if (!game.keysPressed(Key.W) && !game.keysPressed(Key.A) && !game.keysPressed(Key.S) && game.keysPressed(Key.D)) {
           this.direction = East
       } else {
-        playerMoving = false
+        this.playerMoving = false
         this.sprite = this.spritesByDirection.get(this.direction).get(1)
         this.spriteChangeCooldown = 0
       }
       
-      if (playerMoving) {
+      if (this.playerMoving) {
         this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
         this.walkAnimation(timeElapsed)
       }
@@ -54,6 +54,7 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
       if (game.keysPressed(Key.Space)) {
         this.weapon.fire(this.location.x, this.location.y, this.world, this.direction)
       }
+      this.playerMoving = false
   }
   
   def loadSprites() = {

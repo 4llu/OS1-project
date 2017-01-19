@@ -16,30 +16,39 @@ class Location(var x: Int, var y: Int, val width: Int, val height: Int, val worl
     this.y + this.height > other.y
   }
     
-  def moveUntilBlocked(direction: Direction, speed: Double, timeElapsed: Long):Boolean = {
+  def moveUntilBlocked(direction: Direction, speed: Double, timeElapsed: Long):(Boolean, Option[Monster], Boolean) = {
     val dx = direction.xStep*speed*timeElapsed
     val dy = direction.yStep*speed*timeElapsed
     var resultLocation = this
-    var blocked = false
     val distance = Math.sqrt(dx*dx+dy*dy)
+    // Different options of being blocked
+    var blockingCreature: Option[Monster] = None
+    var blockedByTile = false
+
+    // For convenience
+    def blocked: Boolean = blockingCreature.isDefined || blockedByTile
     
     var i = 1
     val stepSize = 1.0
     while (i <= distance/stepSize && !blocked) {
       val newLocation = new Location((this.x + direction.xStep*i*stepSize+0.5).toInt, 
           (this.y + direction.yStep*i*stepSize+0.5).toInt, this.width, this.height, this.world)
+      // Blocked by a monster
       for (monster <- game.monsterList.filter(!_.moving)) {
-        if (!this.overlapsWith(monster.location) && newLocation.overlapsWith(monster.location)) blocked = true
+        if (!this.overlapsWith(monster.location) && newLocation.overlapsWith(monster.location)){
+          blockingCreature = Some(monster)
+        }
       }
+      // Blocked by a tile
       if (this.world.isWalkable(newLocation) && !blocked) {
         resultLocation = newLocation
       } else {
-        blocked = true
+        blockedByTile = true
       }
       i += 1
     }
     this.x = resultLocation.x
     this.y = resultLocation.y
-    blocked
+    (blocked, blockingCreature, blockedByTile)
   }
 }

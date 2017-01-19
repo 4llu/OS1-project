@@ -121,7 +121,7 @@ object game extends Screen{
     }
     
     def startWave() = {
-      val portalCount = if (this.waveNumber < 5) 2 else 3 
+      val portalCount = if (this.waveNumber < 5) 2 else 3
       var portals = 0
       while(portals < portalCount){
         val x = random.nextInt(this.world.map(0).length-1)

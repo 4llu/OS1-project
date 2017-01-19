@@ -25,6 +25,7 @@ abstract class Creature(x: Int, y: Int, world: World, val speed: Double, val max
   
   def takeDamage(damage: Int): Unit = {
     this.hp -= damage
+    println(this.hp)
   }
   
   protected def walkAnimation(timeElapsed: Long) = {

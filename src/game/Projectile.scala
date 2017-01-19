@@ -8,10 +8,10 @@ import java.awt.image.BufferedImage
 abstract class Projectile(x:Int, y:Int, world:World) extends C_Locatable with C_Drawable with C_Updatable{
   var direction: Direction
   var speed: Float
-  var blocked = false
+  var blockedInfo: (Boolean, Option[Monster], Boolean) = _
   val damage: Int
   
   def update(timeElapsed: Long): Unit = {
-    this.blocked = this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
+    this.blockedInfo = this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
   }
 }

@@ -63,7 +63,7 @@ object mapSelection extends Screen {
       this.draw(this.MS_PER_UPDATE)
     }
     if (buttonsClicked(0) == playButton){
-      game.init(2, Hard)
+      game.init(2, Medium)
       game
     } else {
       menu
