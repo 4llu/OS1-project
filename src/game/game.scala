@@ -72,13 +72,14 @@ object game extends Screen{
               startWave()
             }
 
-            while (lag >= this.MS_PER_UPDATE && !this.gameEnded) {
-                this.update(elapsed)
-                lag -= this.MS_PER_UPDATE
-            }
-
+//            while (lag >= this.MS_PER_UPDATE && !this.gameEnded) {
+//                this.update(elapsed)
+//                lag -= this.MS_PER_UPDATE
+//            }
 //            this.draw(lag / MS_PER_UPDATE)
+
             this.draw(this.MS_PER_UPDATE)
+            this.update(elapsed)
         }
 
         Sound.stopGameMusic()
