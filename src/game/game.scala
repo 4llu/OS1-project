@@ -107,9 +107,10 @@ object game extends Screen{
       val portalCount = if (this.waveNumber < 5) 2 else 3 
       var portals = 0
       while(portals < portalCount){
-        val x = random.nextInt(this.world.map(0).length)
-        val y = random.nextInt(this.world.map.size)
-        if (this.world.tiles(y)(x).walkable) {
+        val x = random.nextInt(this.world.map(0).length-1)
+        val y = random.nextInt(this.world.map.size-1)
+        if (this.world.tiles(y)(x).walkable && this.world.tiles(y)(x+1).walkable &&
+            this.world.tiles(y+1)(x).walkable && this.world.tiles(y+1)(x+1).walkable) {
           val portal = new Portal(this.world.tiles(y)(x), this.waveNumber, this.difficulty)
           this.renderList += portal
           this.updateList += portal

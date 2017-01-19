@@ -21,6 +21,7 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
     }
     else {
       this.move(timeElapsed)
+      this.walkAnimation(timeElapsed)
     }
   }
   
