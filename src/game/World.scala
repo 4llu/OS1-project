@@ -45,6 +45,7 @@ class World(worldNum: Int) {
     
   private val tileWidth = 32
   private val tileHeight = 32
+  
     
   val width = map(0).length*32
   val height = map.size*32
@@ -62,10 +63,10 @@ class World(worldNum: Int) {
       var tile = row(x)
       if (tiles(y)(x).tileType == "default"){
         
-        if (tile == ',') { // Top left corner (32x32) of the 64x64 tile
+        if (tile == ',') {
           tiles(y)(x) = new Tile(grassImage, 
               new Location(x*tileWidth, y*tileHeight, tileWidth*2, tileHeight*2, this), true, "grass")
-        } else if (tile == '.') { //The other corners of the 64x64 tile
+        } else if (tile == '.') {
           tiles(y)(x) = new Tile(null, 
               new Location(x*tileWidth, y*tileHeight, tileWidth*2, tileHeight*2, this), true, "extension")
           
@@ -73,7 +74,7 @@ class World(worldNum: Int) {
           tiles(y)(x) = new Tile(flowersImage, 
               new Location(x*tileWidth, y*tileHeight, tileWidth, tileHeight, this), true, "flowers")
           
-        } else if (tile == 'B') { // Top left corner (32x32) of the 64x64 tile
+        } else if (tile == 'B') {
           tiles(y)(x) = new Tile(bushImage, 
               new Location(x*tileWidth, y*tileHeight, tileWidth*2, tileHeight*2, this), false, "bush")
         } else if (tile == 'D') {
@@ -100,7 +101,7 @@ class World(worldNum: Int) {
         } else if (tile == '4') {
           tiles(y)(x) = new Tile(cliffDownLeftImage,
             new Location(x*tileWidth, y*tileHeight, tileWidth*2, tileHeight*2, this), false, "cliffdownleft")
-        } else if (tile == '+') { // The other corners of the 64x64 tile
+        } else if (tile == '+') {
           tiles(y)(x) = new Tile(null, 
               new Location(x*tileWidth, y*tileHeight, tileWidth*2, tileHeight*2, this), false, "extension")
         }
@@ -109,6 +110,39 @@ class World(worldNum: Int) {
     }
     y += 1
   }
+  
+  val cellWidth = 4
+  val cellHeight = 4
+  val grid = ArrayBuffer[ArrayBuffer[Cell]]()
+  for (y <- 0 until tiles.size) {
+    for (j <- 0 until tileHeight / cellHeight) {
+      val gridRow = ArrayBuffer[Cell]()
+      for (x <- 0 until tiles(0).size) {
+        for (i <- 0 until tileWidth / cellWidth) {
+          val cellLocation = new Location(tiles(y)(x).location.x+i*cellWidth, 
+              tiles(y)(x).location.y+j*cellHeight, cellWidth, cellHeight, this)
+          gridRow += new Cell(cellLocation, tiles(y)(x).walkable)
+        }
+      }
+      grid += gridRow
+    }
+  }
+  
+  def getCell(x: Int, y: Int) = {
+    if (x < 0 || y < 0 || x >= this.width || y >= this.height) new Cell(new Location(0,0,0,0,this), false)
+    else grid(y*this.grid.size/this.height)(x*grid(0).length/this.width)
+  }
+  
+  def getCellsUnderLocation(location: Location) = {
+    val cells = ArrayBuffer[Cell]()
+    for (y <- location.y until location.y + location.height+this.cellHeight by this.cellHeight) {
+      for (x <- location.x until location.x + location.width+this.cellWidth by this.cellWidth) {
+        cells += this.getCell(x, y)
+      }
+    }
+    cells
+  }
+  
   
   val bgTileWidth = backgroundImage.getWidth
   val bgTileHeight = backgroundImage.getHeight
@@ -156,5 +190,4 @@ class World(worldNum: Int) {
     }
     result
   }
-  
 }

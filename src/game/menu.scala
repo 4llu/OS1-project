@@ -35,10 +35,13 @@ object menu extends Screen {
       this.draw(this.MS_PER_UPDATE)
     }
     if (buttonsClicked(0) == playButton){
+      buttonsClicked.clear()
       mapSelection
     } else if (buttonsClicked(0) == highscoresButton){
+      buttonsClicked.clear()
       menu
     } else {
+      buttonsClicked.clear()
       menu
     }
   }
@@ -63,9 +66,11 @@ object mapSelection extends Screen {
       this.draw(this.MS_PER_UPDATE)
     }
     if (buttonsClicked(0) == playButton){
+      buttonsClicked.clear()
       game.init(2, Hard)
       game
     } else {
+      buttonsClicked.clear()
       menu
     }
   }

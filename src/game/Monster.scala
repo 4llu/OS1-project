@@ -52,7 +52,7 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
   def move(timeElapsed: Long): Unit = {
     this.direction = this.playerDirection()
     this.moving = true
-    this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
+    this.moveUntilBlocked(timeElapsed)
     this.moving = false
   }
 

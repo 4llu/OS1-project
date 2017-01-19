@@ -1,5 +1,9 @@
 package game
 
+import scala.collection.mutable.Buffer
+import scala.collection.mutable.ArrayBuffer
+import scala.util.control.Breaks._
+
 /**
   * Created by Allu on 11/11/2016.
   */
@@ -16,7 +20,7 @@ class Location(var x: Int, var y: Int, val width: Int, val height: Int, val worl
     this.y + this.height > other.y
   }
     
-  def moveUntilBlocked(direction: Direction, speed: Double, timeElapsed: Long):Boolean = {
+  def moveUntilBlocked(direction: Direction, speed: Double, timeElapsed: Long, subject: C_Locatable):Boolean = {
     val dx = direction.xStep*speed*timeElapsed
     val dy = direction.yStep*speed*timeElapsed
     var resultLocation = this
@@ -24,19 +28,24 @@ class Location(var x: Int, var y: Int, val width: Int, val height: Int, val worl
     val distance = Math.sqrt(dx*dx+dy*dy)
     
     var i = 1
-    val stepSize = 1.0
+    val stepSize = 0.2
     while (i <= distance/stepSize && !blocked) {
       val newLocation = new Location((this.x + direction.xStep*i*stepSize+0.5).toInt, 
           (this.y + direction.yStep*i*stepSize+0.5).toInt, this.width, this.height, this.world)
-      for (monster <- game.monsterList.filter(!_.moving)) {
-        if (!this.overlapsWith(monster.location) && newLocation.overlapsWith(monster.location)) blocked = true
+      breakable {
+        for (cell <- this.world.getCellsUnderLocation(newLocation)) {
+          if ((!cell.walkable || !cell.creatures.filter(_ != subject).isEmpty) && !cell.creatures.contains(subject)) {
+            blocked = true
+            break
+          }
+        }
       }
-      if (this.world.isWalkable(newLocation) && !blocked) {
-        resultLocation = newLocation
-      } else {
-        blocked = true
-      }
+      if (!blocked) resultLocation = newLocation
       i += 1
+    }
+    for (cell <- this.world.getCellsUnderLocation(this)) {
+      cell.creatures = cell.creatures.filter(_ != subject)
+      cell.projectiles = cell.projectiles.filter(_ != subject)
     }
     this.x = resultLocation.x
     this.y = resultLocation.y

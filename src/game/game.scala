@@ -5,17 +5,18 @@ import scala.collection.mutable.ArrayBuffer
 import java.awt.event._
 import scala.swing.event._
 import scala.util.Random
+import scala.collection.mutable.Buffer
 
 object game extends Screen{
 
     var world:World = _
     var player:Player = _
     
-    var points = 0
-    var pointsPrevious = 0
-    var combo = 1
+    var points:Int = _
+    var pointsPrevious:Int = _
+    var combo:Int = _
     val comboResetTime = (4.0 * 1000).toInt
-    var enemyLastKilled = 0L
+    var enemyLastKilled:Long = _
 
     var renderList = new ArrayBuffer[C_Drawable]()
     var updateList = new ArrayBuffer[C_Updatable]()
@@ -30,10 +31,10 @@ object game extends Screen{
     var cameraX = 0
     var cameraY = 0
     
-    var waveNumber = 0
+    var waveNumber:Int = _
     var difficulty: Difficulty = _
     
-    var waveOngoing = false
+    var waveOngoing:Boolean = _
     
     val random = new Random()
 
@@ -44,10 +45,20 @@ object game extends Screen{
       cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2
       cameraY = player.location.y+player.sprite.getHeight/2-Canvas.height/2
       
+      renderList = new ArrayBuffer[C_Drawable]()
+      updateList = new ArrayBuffer[C_Updatable]()
+      monsterList = new ArrayBuffer[Monster]()
+      
       renderList ++= world.backgroundTiles.flatten
       renderList ++= world.tiles.flatten.filter(_.tileType != "extension")
       renderList += player
       
+      points = 0
+      pointsPrevious = 0
+      combo = 1
+      enemyLastKilled = 0L
+      waveNumber = 0
+      waveOngoing = false
       this.difficulty = dif
     }
     
@@ -88,9 +99,13 @@ object game extends Screen{
     def update(timeElapsed: Long): Unit = {
       // Update lists
       this.updateList.foreach(_.update(timeElapsed))
+      updateCells(updateList.toBuffer[C_Drawable])
       this.updateList = this.updateList.filter(!_.remove)
+      updateCells(renderList.toBuffer[C_Drawable])
       this.renderList = this.renderList.filter(!_.remove)
+      updateCells(monsterList.toBuffer[C_Drawable])
       this.monsterList = this.monsterList.filter(!_.remove)
+      
       // Update combo counter
       val curTime = System.currentTimeMillis() 
       if (this.points != this.pointsPrevious) {
@@ -139,5 +154,14 @@ object game extends Screen{
         game.renderList += monster
         game.updateList += monster
         game.monsterList += monster
+    }
+    
+    def updateCells(list:Buffer[C_Drawable]) = {
+      for (obj <- list.filter(_.remove)){
+        for (cell <- this.world.getCellsUnderLocation(obj.location)) {
+          cell.creatures = cell.creatures.filter(_ != obj)
+          cell.projectiles = cell.projectiles.filter(_ != obj)
+        }
+      }
     }
 }

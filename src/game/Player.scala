@@ -47,7 +47,7 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
       }
       
       if (playerMoving) {
-        this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
+        this.moveUntilBlocked(timeElapsed)
         this.walkAnimation(timeElapsed)
       }
       
