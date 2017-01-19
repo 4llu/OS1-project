@@ -90,6 +90,7 @@ object game extends Screen{
       this.updateList.foreach(_.update(timeElapsed))
       this.updateList = this.updateList.filter(!_.remove)
       this.renderList = this.renderList.filter(!_.remove)
+      this.monsterList = this.monsterList.filter(!_.remove)
       // Update combo counter
       val curTime = System.currentTimeMillis() 
       if (this.points != this.pointsPrevious) {
