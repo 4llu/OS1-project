@@ -17,9 +17,11 @@ object game extends Screen{
     val comboResetTime = (4.0 * 1000).toInt
     var enemyLastKilled = 0L
 
+    // Lists
     var renderList = new ArrayBuffer[C_Drawable]()
     var updateList = new ArrayBuffer[C_Updatable]()
     var monsterList = new ArrayBuffer[Monster]()
+    var portalList = new ArrayBuffer[Portal]()
     private var inputList = new ArrayBuffer[(Key.Value, Boolean)]()
     
     var buttons = ArrayBuffer[Button]()
@@ -32,8 +34,6 @@ object game extends Screen{
     
     var waveNumber = 0
     var difficulty: Difficulty = _
-    
-    var waveOngoing = false
     
     val random = new Random()
 
@@ -67,8 +67,7 @@ object game extends Screen{
             player.update(elapsed)
             this.processInput(elapsed)
             
-            if (this.monsterList.isEmpty && !waveOngoing) {
-              this.waveOngoing = true
+            if (this.monsterList.isEmpty && this.portalList.isEmpty) {
               this.waveNumber += 1
               startWave()
             }
@@ -91,6 +90,7 @@ object game extends Screen{
       this.updateList = this.updateList.filter(!_.remove)
       this.renderList = this.renderList.filter(!_.remove)
       this.monsterList = this.monsterList.filter(!_.remove)
+      this.portalList = this.portalList.filter(!_.remove)
       // Update combo counter
       val curTime = System.currentTimeMillis() 
       if (this.points != this.pointsPrevious) {
@@ -128,12 +128,12 @@ object game extends Screen{
         val y = random.nextInt(this.world.map.size-1)
         if (this.world.tiles(y)(x).walkable && this.world.tiles(y)(x+1).walkable &&
             this.world.tiles(y+1)(x).walkable && this.world.tiles(y+1)(x+1).walkable) {
-          val portal = new Portal(this.world.tiles(y)(x), this.waveNumber, this.difficulty)
-          this.renderList += portal
-          this.updateList += portal
+          this.portalList.append(new Portal(this.world.tiles(y)(x), this.waveNumber, this.difficulty))
           portals += 1
         }
       }
+      this.updateList ++= this.portalList
+      this.renderList ++= this.portalList
     }
     def addMonster(monster:Monster) = {
         game.renderList += monster

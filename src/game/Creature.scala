@@ -23,11 +23,8 @@ abstract class Creature(x: Int, y: Int, world: World, val speed: Double, val max
 
   def isDead(): Boolean = this.hp <= 0
   
-  def takeDamage(damage: Int): Unit = {
-    this.hp -= damage
-    println(this.hp)
-  }
-  
+  def takeDamage(damage: Int): Unit = this.hp -= damage
+
   protected def walkAnimation(timeElapsed: Long) = {
     if (this.spriteChangeCooldown > 0) {
       this.spriteChangeCooldown -= timeElapsed/1000.0
