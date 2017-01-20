@@ -7,7 +7,9 @@ import javax.imageio.ImageIO
 /**
   * Created by Allu on 18/01/2017.
   */
-class Firebomb(x:Int, y:Int, world:World, var direction: Direction) extends Projectile(x, y, world) {
+class Firebomb(x:Int, y:Int, world:World, var direction: Direction, hitsMonsters: Boolean, hitsPlayer: Boolean) 
+  extends Projectile(x, y, world, hitsMonsters, hitsPlayer) {
+  
   // Stats
   var speed = 1.0f
   val damage = 30
@@ -24,27 +26,27 @@ class Firebomb(x:Int, y:Int, world:World, var direction: Direction) extends Proj
 
   val timeFired = System.currentTimeMillis()
 
-  override def update(timeElapsed: Long): Unit = {
-    if (!this.exploding) { // Flying
-      super.update(timeElapsed)
-      // If the bomb hit something or the fuse burned up
-      if (this.blockedInfo._1 || System.currentTimeMillis() - this.timeFired >= this.fuse) this.exploding = true
-    }
-    else if (this.exploding && !this.damageDealt) { // Explode (Deal explosion damage and play explosion sfx)
-      // Play sfx
-      Sound.playSoundEffect("fireball") // FIXME wrong sfx
-      // Deal damage
-      for (monster <- game.monsterList) {
-        if (Math.hypot(this.centerX - monster.centerX, this.centerY - monster.centerY) < this.explosionRange) {
-          monster.takeDamage(this.damage)
-        }
-      }
-    }
-    // Play explosion animation
-    if (this.exploding) {
-      // TODO Explosion animation
-    }
-
-
-  }
+//  override def update(timeElapsed: Long): Unit = {
+//    if (!this.exploding) { // Flying
+//      super.update(timeElapsed)
+//      // If the bomb hit something or the fuse burned up
+//      if (this.blockedInfo._1 || System.currentTimeMillis() - this.timeFired >= this.fuse) this.exploding = true
+//    }
+//    else if (this.exploding && !this.damageDealt) { // Explode (Deal explosion damage and play explosion sfx)
+//      // Play sfx
+//      Sound.playSoundEffect("fireball") // FIXME wrong sfx
+//      // Deal damage
+//      for (monster <- game.monsterList) {
+//        if (Math.hypot(this.centerX - monster.centerX, this.centerY - monster.centerY) < this.explosionRange) {
+//          monster.takeDamage(this.damage)
+//        }
+//      }
+//    }
+//    // Play explosion animation
+//    if (this.exploding) {
+//      // TODO Explosion animation
+//    }
+//
+//
+//  }
 }

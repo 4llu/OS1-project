@@ -21,6 +21,9 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
   // Location and moving
   var location = new Location(x, y, sprite.getWidth, sprite.getHeight, world)
   var playerMoving = false
+  
+  val collidesWithPlayer = false
+  val collidesWithMonsters = true
       
   def update(timeElapsed: Long): Unit = {
     this.playerMoving = true
@@ -50,7 +53,7 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
 
     // Move
     if (this.playerMoving) {
-      this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
+      this.moveUntilBlocked(timeElapsed)
       this.walkAnimation(timeElapsed)
     }
 

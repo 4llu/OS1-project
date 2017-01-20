@@ -6,8 +6,12 @@ import javax.imageio.ImageIO
 import scala.collection.mutable.ArrayBuffer
 
 class Portal(tile:Tile, waveNumber:Int, difficulty:Difficulty) extends C_Drawable with C_Updatable {
-
+  val onPlayerSide = false
+  
   var location = tile.location
+  
+  val collidesWithPlayer = false
+  val collidesWithMonsters = false
 
   // Sprites
   private var portal1Sprite = ImageIO.read(new File("media/portal1.png"))
@@ -21,7 +25,7 @@ class Portal(tile:Tile, waveNumber:Int, difficulty:Difficulty) extends C_Drawabl
   var sprite:BufferedImage = portal1Sprite
 
   // Spawning config
-  private val baseSpawnCooldown = 3.0
+  private val baseSpawnCooldown = 1.0
   private var spawnCooldown = 2.0
 
   private var waveSize = 0

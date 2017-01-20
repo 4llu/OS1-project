@@ -5,114 +5,130 @@ import scala.collection.mutable.ArrayBuffer
 import java.awt.event._
 import scala.swing.event._
 import scala.util.Random
+import scala.collection.mutable.Buffer
 
 object game extends Screen{
 
-  var world:World = _
-  var player:Player = _
+    var world:World = _
+    var player:Player = _
+    
+    // Point system
+    var points:Int = _
+    var pointsPrevious:Int = _
+    var combo:Int = _
+    val comboResetTime = (4.0 * 1000).toInt
+    var enemyLastKilled:Long = _
 
-  // Point system
-  var points = 0
-  var pointsPrevious = 0
-  var combo = 1
-  val comboResetTime = (4.0 * 1000).toInt
-  var enemyLastKilled = 0L
-
-  // Lists
-  var renderList = new ArrayBuffer[C_Drawable]()
-  var updateList = new ArrayBuffer[C_Updatable]()
-  var monsterList = new ArrayBuffer[Monster]()
-  var portalList = new ArrayBuffer[Portal]()
-  private var inputList = new ArrayBuffer[(Key.Value, Boolean)]()
-
-  var buttons = ArrayBuffer[Button]()
-
-  val keysPressed = scala.collection.mutable.Map[Key.Value, Boolean](
-      (Key.W, false), (Key.A, false), (Key.S, false), (Key.D, false), (Key.Space, false))
-
-  // Camera location
-  var cameraX = 0
-  var cameraY = 0
-
-  var waveNumber = 0
-  var difficulty: Difficulty = _
-
-  val random = new Random()
+    //Lists
+    var renderList: ArrayBuffer[C_Drawable] = _
+    var updateList: ArrayBuffer[C_Updatable] = _
+    var monsterList: ArrayBuffer[Monster] = _
+    var portalList: ArrayBuffer[Portal] = _
+    private var inputList: ArrayBuffer[(Key.Value, Boolean)] = _
+    
+    val keysPressed = scala.collection.mutable.Map[Key.Value, Boolean](
+        (Key.W, false), (Key.A, false), (Key.S, false), (Key.D, false), (Key.Space, false))
+    
+    // Camera location
+    var cameraX = 0
+    var cameraY = 0
+    
+    var waveNumber:Int = _
+    var difficulty: Difficulty = _
+    
+    val random = new Random()
 
   /* Initialize the world with the right world and difficulty */
-  def init(worldNum: Int, dif: Difficulty): Unit = {
-    world = new World(worldNum) // Load the map
-    player = new Player(world.width/2, world.height/2, world)
-    this.difficulty = dif
-
+    def init(worldNum: Int, dif: Difficulty): Unit = {
+      world = new World(worldNum) // Load the map
+      player = new Player(world.width/2, world.height/2, world)
+      
     // Set camera position
-    cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2
-    cameraY = player.location.y+player.sprite.getHeight/2-Canvas.height/2
-
+      cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2
+      cameraY = player.location.y+player.sprite.getHeight/2-Canvas.height/2
+      
+      renderList = new ArrayBuffer[C_Drawable]()
+      updateList = new ArrayBuffer[C_Updatable]()
+      monsterList = new ArrayBuffer[Monster]()
+      portalList = new ArrayBuffer[Portal]()
+      inputList = new ArrayBuffer[(Key.Value, Boolean)]()
+      
     // Add the map and player to renderlist
-    renderList ++= world.backgroundTiles.flatten
-    renderList ++= world.tiles.flatten.filter(_.tileType != "extension")
-    renderList += player
-  }
+      renderList ++= world.backgroundTiles.flatten
+      renderList ++= world.tiles.flatten.filter(_.tileType != "extension")
+      renderList += player
+      
+      points = 0
+      pointsPrevious = 0
+      combo = 1
+      enemyLastKilled = 0L
+      waveNumber = 0
+      this.difficulty = dif
+    }
     
-  def run(): Screen = {
+    def run(): Screen = {
+        
+        var previous: Long = System.currentTimeMillis
+        var lag = 0.0
+    
+        // Start game music
+        Sound.playGameMusic()
+    
+        // Main game loop
+        while (!this.gameEnded) {
+            val current = System.currentTimeMillis
+            var elapsed = current - previous
+            previous = current
+            lag += elapsed
 
-    var previous: Long = System.currentTimeMillis
-    var lag = 0.0
+            player.update(elapsed)
+            this.processInput(elapsed)
+            
+            // Wave management
+            if (this.monsterList.isEmpty && this.portalList.isEmpty) {
+              this.waveNumber += 1
+              startWave()
+            }
 
-    // Start game music
-    Sound.playGameMusic()
+      //      while (lag >= this.MS_PER_UPDATE && !this.gameEnded) {
+      //          this.update(elapsed)
+      //          lag -= this.MS_PER_UPDATE
+      //      }
+      //      this.draw(lag / MS_PER_UPDATE)
+      
+            // Update and draw all game objects
+            this.update(elapsed)
+            this.draw(this.MS_PER_UPDATE)
+        }
 
-    // Main game loop
-    while (!this.gameEnded) {
-      val current = System.currentTimeMillis
-      var elapsed = current - previous
-      previous = current
-      lag += elapsed
-
-      player.update(elapsed)
-      this.processInput(elapsed)
-
-      // Wave management
-      if (this.monsterList.isEmpty && this.portalList.isEmpty) {
-        this.waveNumber += 1
-        startWave()
+        // Game over, return to menu
+        Sound.stopGameMusic()
+        cameraX = 0
+        cameraY = 0
+        menu
+    }
+  /* Update all game Objects */
+    def update(timeElapsed: Long): Unit = {
+      // Update lists
+      this.updateList.foreach(_.update(timeElapsed))
+      updateCells(updateList.toBuffer[C_Drawable])
+      this.updateList = this.updateList.filter(!_.remove)
+      this.renderList = this.renderList.filter(!_.remove)
+      this.monsterList = this.monsterList.filter(!_.remove)
+      this.portalList = this.portalList.filter(!_.remove)
+      
+      // Update combo counter
+      val curTime = System.currentTimeMillis() 
+      if (this.points != this.pointsPrevious) {
+        this.combo += 1
+        this.enemyLastKilled = curTime
+      }
+      // Reset combo
+      else if (this.combo != 1 && curTime - this.enemyLastKilled > this.comboResetTime) {
+        this.combo = 1
       }
 
-//      while (lag >= this.MS_PER_UPDATE && !this.gameEnded) {
-//          this.update(elapsed)
-//          lag -= this.MS_PER_UPDATE
-//      }
-//      this.draw(lag / MS_PER_UPDATE)
-
-      // Update and draw alla game objects
-      this.update(elapsed)
-      this.draw(this.MS_PER_UPDATE)
-
     }
-
-    // Game over, return to menu
-    menu
-  }
-  /* Update all game Objects */
-  def update(timeElapsed: Long): Unit = {
-    // Update lists
-    this.updateList.foreach(_.update(timeElapsed))
-    this.updateList = this.updateList.filter(!_.remove)
-    this.renderList = this.renderList.filter(!_.remove)
-    this.monsterList = this.monsterList.filter(!_.remove)
-    this.portalList = this.portalList.filter(!_.remove)
-    // Update combo counter
-    val curTime = System.currentTimeMillis()
-    if (this.points != this.pointsPrevious) {
-      this.combo += 1
-      this.enemyLastKilled = curTime
-    }
-    // Reset combo
-    else if (this.combo != 1 && curTime - this.enemyLastKilled > this.comboResetTime) {
-      this.combo = 1
-    }
-  }
 
   def processInput(timeElapsed: Long): Unit = {
     for ((key, pressed) <- inputList) {
@@ -155,6 +171,14 @@ object game extends Screen{
     this.updateList ++= this.portalList
     this.renderList ++= this.portalList
   }
+    def updateCells(list:Buffer[C_Drawable]) = {
+      for (obj <- list.filter(_.remove)){
+        for (cell <- this.world.getCellsUnderLocation(obj.location)) {
+          cell.creatures = cell.creatures.filter(_ != obj)
+          cell.projectiles = cell.projectiles.filter(_ != obj)
+        }
+      }
+    }
 
   /* Add a monster to all relevant lists*/
   def addMonster(monster:Monster) = {

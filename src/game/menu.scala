@@ -22,7 +22,7 @@ object menu extends Screen {
   private var optionsButton = new Button(205, 397, ImageIO.read(new File("media/UI/options_button.png")), 
       ImageIO.read(new File("media/UI/options_button_hover.png")))
   
-  var buttons = ArrayBuffer[Button](playButton, highscoresButton, optionsButton)
+  this.buttons = ArrayBuffer[Button](playButton, highscoresButton, optionsButton)
   
   this.renderList ++= this.buttons
   
@@ -30,15 +30,17 @@ object menu extends Screen {
 
     Sound.playMenuMusic()
 
-    while(buttonsClicked.isEmpty) {
-      buttonsClicked = this.buttons.filter (_.clicked)
+    while(this.buttons.filter (_.clicked).isEmpty) {
       this.draw(this.MS_PER_UPDATE)
     }
-    if (buttonsClicked(0) == playButton){
+    if (playButton.clicked){
+      playButton.clicked = false
       mapSelection
-    } else if (buttonsClicked(0) == highscoresButton){
+    } else if (highscoresButton.clicked){
+      highscoresButton.clicked = false
       menu
     } else {
+      optionsButton.clicked = false
       menu
     }
   }
@@ -53,16 +55,16 @@ object mapSelection extends Screen {
   private var playButton = new Button(205, 278, ImageIO.read(new File("media/UI/play_button.png")), 
       ImageIO.read(new File("media/UI/play_button_hover.png")))
   
-  var buttons = ArrayBuffer[Button](playButton)
+  this.buttons = ArrayBuffer[Button](playButton)
   
   this.renderList ++= this.buttons
   
   def run() = {
-    while(buttonsClicked.isEmpty) {
-      buttonsClicked = this.buttons.filter (_.clicked)
+    while(this.buttons.filter (_.clicked).isEmpty) {
       this.draw(this.MS_PER_UPDATE)
     }
-    if (buttonsClicked(0) == playButton){
+    if (playButton.clicked){
+      playButton.clicked = false
       game.init(2, Medium)
       game
     } else {

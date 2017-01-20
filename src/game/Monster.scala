@@ -17,6 +17,9 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
   var died = 0L // Time of death (for death animation)
   val deathAnimationLength: Int
   
+  val collidesWithPlayer = true
+  val collidesWithMonsters = true
+  
   def update(timeElapsed: Long): Unit = {
     // Update normally
     if (!this.isDead) {
@@ -52,7 +55,7 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
   def move(timeElapsed: Long): Unit = {
     this.direction = this.playerDirection()
     this.moving = true
-    this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed)
+    this.moveUntilBlocked(timeElapsed)
     this.moving = false
   }
 

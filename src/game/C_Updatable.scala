@@ -5,4 +5,6 @@ package game
   */
 trait C_Updatable extends C_Drawable{
   def update(timeElapsed: Long): Unit
+  val collidesWithMonsters: Boolean
+  val collidesWithPlayer: Boolean
 }

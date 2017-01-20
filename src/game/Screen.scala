@@ -7,9 +7,7 @@ abstract class Screen() {
   
   val MS_PER_UPDATE = 13
     
-  var buttons: ArrayBuffer[Button]
-  
-  var buttonsClicked = ArrayBuffer[Button]()
+  var buttons = ArrayBuffer[Button]()
   
   var renderList: ArrayBuffer[C_Drawable]
   def run(): Screen
