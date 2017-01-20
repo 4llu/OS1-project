@@ -16,6 +16,12 @@ class Cell(var location: Location, val walkable: Boolean) extends C_Locatable {
     neighbors.toVector
   }
   
+  def isBlockedFor(subject: C_Updatable) = {
+    !this.walkable || (!this.creatures.contains(subject) &&
+    (subject.collidesWithPlayer && this.creatures.contains(game.player)) ||
+    (subject.collidesWithMonsters && !this.creatures.filter(_ != subject).filter(_ != game.player).isEmpty))
+  }
+  
   var creatures = Buffer[Creature]()
   var projectiles = Buffer[Projectile]()
 }

@@ -5,10 +5,8 @@ import java.io.File
 import javax.imageio.ImageIO
 import scala.collection.mutable.ArrayBuffer
 
-class Portal(tile:Tile, waveNumber:Int, difficulty:Difficulty) extends C_Drawable with C_Updatable {
+class Portal(x: Int, y: Int, world: World, waveNumber:Int, difficulty:Difficulty) extends C_Drawable with C_Updatable {
   val onPlayerSide = false
-  
-  var location = tile.location
   
   val collidesWithPlayer = false
   val collidesWithMonsters = false
@@ -23,6 +21,8 @@ class Portal(tile:Tile, waveNumber:Int, difficulty:Difficulty) extends C_Drawabl
   private var spriteChangeCooldown = baseSpriteChangeCooldown
   
   var sprite:BufferedImage = portal1Sprite
+  
+  var location = new Location(x, y, sprite.getWidth(), sprite.getHeight(), world)
 
   // Spawning config
   private val baseSpawnCooldown = 1.0
@@ -71,9 +71,15 @@ class Portal(tile:Tile, waveNumber:Int, difficulty:Difficulty) extends C_Drawabl
     if (spawnCooldown > 0) { // On cooldown
       spawnCooldown -= timeElapsed/1000.0
     } else if (monstersToSpawn.nonEmpty){ // Spawn monster
-      spawnCooldown = baseSpawnCooldown + game.random.nextDouble()*0.2-0.1
-      game.addMonster(monstersToSpawn(0))
-      monstersToSpawn = monstersToSpawn.tail
+      var spawnBlocked = false
+      for (cell <- this.location.world.getCellsUnderLocation(this.location)) {
+        if (cell.isBlockedFor(monstersToSpawn(0))) spawnBlocked = true
+      }
+      if (!spawnBlocked) {
+        spawnCooldown = baseSpawnCooldown + game.random.nextDouble()*0.2-0.1
+        game.addMonster(monstersToSpawn(0))
+        monstersToSpawn = monstersToSpawn.tail
+      }
     } else { // All monsters spawned
       this.remove = true
     }

@@ -114,8 +114,8 @@ class World(worldNum: Int) {
     y += 1
   }
   
-  val cellWidth = 4
-  val cellHeight = 4
+  val cellWidth = 16
+  val cellHeight = 16
   val grid = ArrayBuffer[ArrayBuffer[Cell]]()
   for (y <- 0 until tiles.size) {
     for (j <- 0 until tileHeight / cellHeight) {
