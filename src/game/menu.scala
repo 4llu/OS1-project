@@ -24,7 +24,7 @@ object menu extends Screen {
   private var highscoresButton = new Button(205, 338, ImageIO.read(new File("media/UI/highscores_button.png")), 
       ImageIO.read(new File("media/UI/highscores_button_hover.png")))
   private var instructionsButton = new Button(205, 397, ImageIO.read(new File("media/UI/instructions_button.png")), 
-      ImageIO.read(new File("media/UI/options_button_hover.png")))
+      ImageIO.read(new File("media/UI/instructions_button_hover.png")))
   private var musicButton = new Button(10, 10, ImageIO.read(new File("media/UI/sound_button_music_on.png")), 
       ImageIO.read(new File("media/UI/sound_button_music_on.png")))
   private var sfxButton = new Button(60, 10, ImageIO.read(new File("media/UI/sound_button_sfx_on.png")), 
@@ -330,7 +330,7 @@ object gameOver extends Screen {
 }
 
 //////////////////
-// Instructions //
+// INSTRUCTIONS //
 //////////////////
 
 object instructions extends Screen {
@@ -429,9 +429,9 @@ object instructions extends Screen {
   }
 }
 
-//////////////////
-// Instructions //
-//////////////////
+/////////////////
+// HIGH SCORES //
+/////////////////
 
 object highscores extends Screen {
   var renderList = ArrayBuffer[C_Drawable](new C_Drawable() {
@@ -441,12 +441,12 @@ object highscores extends Screen {
   },
   new C_Drawable() {
     // Highscores text
-    var sprite = ImageIO.read(new File("media/UI/highscores_text.png")) // FIXME images
+    var sprite = ImageIO.read(new File("media/UI/highscores_text.png"))
     var location = new Location(335, 40, sprite.getWidth, sprite.getHeight, null)
   },
   new C_Drawable() {
     // Scroll background
-    var sprite = ImageIO.read(new File("media/UI/instruction_scroll.png")) // FIXME images
+    var sprite = ImageIO.read(new File("media/UI/empty_scroll.png"))
     var location = new Location(282, 172, sprite.getWidth, sprite.getHeight, null)
   })
   
