@@ -13,7 +13,7 @@ abstract class Spell(var ammo: Int, attackSpeed: Double) {
 
   def projectiles(x:Int, y:Int, world:World, direction: Direction): ArrayBuffer[Projectile]
   
-  def fire(x:Int, y:Int, world: World, direction: Direction) = {
+  def fire(x:Int, y:Int, world: World, direction: Direction): Unit = {
     if (this.canFire) {
       // Play sfx
       Sound.playSoundEffect(this.soundEffect)
