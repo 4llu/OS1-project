@@ -134,10 +134,12 @@ object game extends Screen{
       this.portalList = this.portalList.filter(!_.remove)
       this.dropList = this.dropList.filter(!_.remove)
       
+      // XXX NO TIME!!!!
+      // Combos work, but there is no time to make a visible combo counter, so it is disabled for now
       // Update combo counter
       val curTime = System.currentTimeMillis() 
       if (this.points != this.pointsPrevious) {
-        this.combo += 1
+        this.combo += 0 // XXX 0 -> 1 and combos works
         this.enemyLastKilled = curTime
       }
       // Reset combo

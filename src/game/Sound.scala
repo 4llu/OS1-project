@@ -17,15 +17,19 @@ object Sound {
   val random = new Random()
 
   // Mute options
-  val muteSfx = false
-  val muteMusic = false
+  var muteSfx = false
+  var muteMusic = false
+  
+  // Location
+  var inMenu = true
 
   // Preload musics
   val menuMusic: Clip = this.getSound("menu_music", -10.0f)
   val gameMusic: Clip = this.getSound("game_music_1", -10.0f)
-
+  
   /* Start menu music if not playing yet. Also stop game music if it's playing. */
   def playMenuMusic(): Unit = {
+    this.inMenu = true
     if (!this.muteMusic) {
       this.stopGameMusic()
       if (!this.menuMusic.isActive) this.menuMusic.loop(Clip.LOOP_CONTINUOUSLY)
@@ -38,6 +42,7 @@ object Sound {
 
   /* Start game music if not playing yet. Also stop menu music if it's playing. */
   def playGameMusic(): Unit = {
+    this.inMenu = false
     if (!this.muteMusic) {
       this.stopMenuMusic()
       if (!this.gameMusic.isActive) this.gameMusic.loop(Clip.LOOP_CONTINUOUSLY)
