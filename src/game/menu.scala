@@ -346,8 +346,8 @@ object instructions extends Screen {
   },
   new C_Drawable() {
     // Scroll background
-    var sprite = ImageIO.read(new File("media/UI/instruction_scroll.png")) // FIXME images
-    var location = new Location(282, 172, sprite.getWidth, sprite.getHeight, null)
+    var sprite = ImageIO.read(new File("media/UI/instructions_scroll.png")) // FIXME images
+    var location = new Location(254, 136, sprite.getWidth, sprite.getHeight, null)
   })
   
   // Return button
@@ -446,8 +446,8 @@ object highscores extends Screen {
   },
   new C_Drawable() {
     // Scroll background
-    var sprite = ImageIO.read(new File("media/UI/empty_scroll.png"))
-    var location = new Location(282, 172, sprite.getWidth, sprite.getHeight, null)
+    var sprite = ImageIO.read(new File("media/UI/empty_scroll_big.png"))
+    var location = new Location(254, 136, sprite.getWidth, sprite.getHeight, null)
   })
   
   // Return button
