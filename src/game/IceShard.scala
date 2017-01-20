@@ -34,4 +34,6 @@ class IceShard(x:Int, y:Int, world:World, var direction: Direction, hitsMonsters
 //    // Remove if blocked by terrain
 //    if (this.blockedInfo._1) this.remove
 //  }
+  
+  override def toString(): String = "FirebombSpell"
 }
