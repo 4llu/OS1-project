@@ -20,8 +20,8 @@ abstract class Creature(x: Int, y: Int, world: World, val speed: Double, val max
   protected var spriteIndex = 0
   protected var spritesByDirection = Map[Direction, Vector[BufferedImage]]()
     
-  def centerX: Int = this.location.x + this.sprite.getWidth()/2
-  def centerY: Int = this.location.y + this.sprite.getHeight()/2
+//  def centerX: Int = this.location.x + this.sprite.getWidth()/2
+//  def centerY: Int = this.location.y + this.sprite.getHeight()/2
 
   def isDead(): Boolean = this.hp <= 0
   

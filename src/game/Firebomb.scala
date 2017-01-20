@@ -8,22 +8,43 @@ import javax.imageio.ImageIO
   * Created by Allu on 18/01/2017.
   */
 class Firebomb(x:Int, y:Int, world:World, var direction: Direction) extends Projectile(x, y, world) {
+  // Stats
   var speed = 1.0f
   val damage = 30
-  var sprite: BufferedImage = ImageIO.read(new File("media/fireball.png"))
-  var location = new Location(x, y, sprite.getWidth, sprite.getHeight, world)
-
-  val timeFired = System.currentTimeMillis()
+  val explosionRange = 150
   val fuse = 1.5
 
-  override def update(timeElapsed: Long): Unit = {
-    super.update(timeElapsed)
-    if (System.currentTimeMillis() - this.timeFired >= this.fuse) {
-      this.explode()
-    }
-  }
+  // Other
+  var sprite: BufferedImage = ImageIO.read(new File("media/fireball.png")) // FIXME Wrong sprite
+  var location = new Location(x, y, sprite.getWidth, sprite.getHeight, world)
 
-  def explode(): Unit = {
-    // TODO Explosion
+  // Flags
+  var exploding = false
+  var  damageDealt = false
+
+  val timeFired = System.currentTimeMillis()
+
+  override def update(timeElapsed: Long): Unit = {
+    if (!this.exploding) { // Flying
+      super.update(timeElapsed)
+      // If the bomb hit something or the fuse burned up
+      if (this.blockedInfo._1 || System.currentTimeMillis() - this.timeFired >= this.fuse) this.exploding = true
+    }
+    else if (this.exploding && !this.damageDealt) { // Explode (Deal explosion damage and play explosion sfx)
+      // Play sfx
+      Sound.playSoundEffect("fireball") // FIXME wrong sfx
+      // Deal damage
+      for (monster <- game.monsterList) {
+        if (Math.hypot(this.centerX - monster.centerX, this.centerY - monster.centerY) < this.explosionRange) {
+          monster.takeDamage(this.damage)
+        }
+      }
+    }
+    // Play explosion animation
+    if (this.exploding) {
+      // TODO Explosion animation
+    }
+
+
   }
 }
