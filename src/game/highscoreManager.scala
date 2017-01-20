@@ -9,7 +9,7 @@ import scala.util.control.Breaks
 /**
   * Created by Allu on 19/01/2017.
   */
-object Highscores {
+object highscoreManager {
 
   val highscoreListLength = 5 // Max amount of highscores saved at a time
 

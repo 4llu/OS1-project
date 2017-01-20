@@ -4,6 +4,11 @@ import scala.collection.mutable.ArrayBuffer
 import scala.swing.event._
 import java.io.File
 import javax.imageio.ImageIO
+import scala.swing.Label
+import scala.swing.GridPanel
+import scala.swing.BoxPanel
+import scala.swing.Orientation
+import scala.swing.Frame
 
 //////////
 // MENU //
@@ -270,6 +275,19 @@ object gameOver extends Screen {
   
   def run() = {
             
+    val scorePanel = new BoxPanel(Orientation.Vertical)
+    scorePanel.contents += new Label("Your score: "+game.points+"\n")
+    if (highscoreManager.isAHighscore(game.points, Medium)) {
+      scorePanel.contents += new Label("New highscore!")
+      highscoreManager.newHighscore(System.currentTimeMillis.toString(), Medium, game.points, 
+          if (game.world.worldNum == 1) "Bush League"
+          else if (game.world.worldNum == 2) "High Ground"
+          else "Plains")
+    }
+    val gameOverFrame = new Frame()
+    gameOverFrame.contents =  scorePanel
+    gameOverFrame.visible = true
+  
     while(this.buttons.filter (_.clicked).isEmpty) {
       this.draw(this.MS_PER_UPDATE)
     }
@@ -470,6 +488,16 @@ object highscores extends Screen {
   this.renderList ++= this.buttons
   
   def run() = {
+    
+    var scores = highscoreManager.getHighscores(Medium) 
+    var panel = new BoxPanel(Orientation.Vertical)
+    for (score <- scores) {
+      panel.contents += new Label(score._1 +" - "+ score._2 +" - "+ score._3+"\n")
+    }
+    val highscoreframe = new Frame()
+    highscoreframe.contents = panel 
+    highscoreframe.visible = true
+    
     while(this.buttons.filter (_.clicked).isEmpty) {
       this.draw(this.MS_PER_UPDATE)
     }

@@ -24,6 +24,9 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
   
   val collidesWithPlayer = false
   val collidesWithMonsters = true
+  
+  val baseWeaponChangeCooldown = 0.1
+  var weaponChangeCooldown = 0.0
       
   def update(timeElapsed: Long): Unit = {
     this.playerMoving = true
@@ -60,6 +63,19 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
     // Fire
     if (game.keysPressed(Key.Space)) {
       this.fire()
+    }
+    
+    if (weaponChangeCooldown > 0) {
+      weaponChangeCooldown -= timeElapsed/1000.0
+    } else {
+      if (game.keysPressed(Key.K) && !game.keysPressed(Key.M)) {
+          weaponChangeCooldown = baseWeaponChangeCooldown
+          this.nextWeapon()
+      }
+      if (!game.keysPressed(Key.K) && game.keysPressed(Key.M)) {
+          weaponChangeCooldown = baseWeaponChangeCooldown
+          this.previousWeapon()
+      }
     }
 
     this.playerMoving = false

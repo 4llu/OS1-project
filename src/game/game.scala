@@ -32,8 +32,7 @@ object game extends Screen{
     private var inputList: ArrayBuffer[(Key.Value, Boolean)] = new ArrayBuffer[(Key.Value, Boolean)]()
     
     // Input
-    var keysPressed = scala.collection.mutable.Map[Key.Value, Boolean](
-        (Key.W, false), (Key.A, false), (Key.S, false), (Key.D, false), (Key.Space, false))
+    var keysPressed = scala.collection.mutable.Map[Key.Value, Boolean]()
     
     // Camera location
     var cameraX = 0
@@ -65,7 +64,8 @@ object game extends Screen{
       // Reset Input
       this.inputList.clear()
       this.keysPressed = scala.collection.mutable.Map[Key.Value, Boolean](
-        (Key.W, false), (Key.A, false), (Key.S, false), (Key.D, false), (Key.Space, false))
+        (Key.W, false), (Key.A, false), (Key.S, false), (Key.D, false), (Key.Space, false),
+        (Key.K, false), (Key.M, false))
       
       // Add the map and player to renderlist
       this.renderList ++= world.backgroundTiles.flatten
