@@ -32,7 +32,7 @@ object PathFinding {
         else monsterStuckWithMonster = true
       }
     }
-    while(!openList.isEmpty && !pathFound && closedList.length < 1500) {
+    while(!openList.isEmpty && !pathFound && closedList.length < 500) {
       val current = openList.root._1
       if (current.creatures.contains(game.player)) {
         pathFound = true

@@ -17,22 +17,13 @@ class Location(var x: Int, var y: Int, val width: Int, val height: Int, val worl
   }
   
   def moveUntilBlocked(direction: Direction, distance: Double, subject: C_Updatable):Boolean = {
-//  /* Move until blocked by the terrain or by a monster (default, monsters can be ignored with an extra parameter */
-//  def moveUntilBlocked(direction: Direction, speed: Double, timeElapsed: Long, ignoreMonsters: Boolean = false):(Boolean, Option[Monster], Boolean) = {
     val dx = direction.xStep*distance
     val dy = direction.yStep*distance
     var resultLocation = this
     val dist = Math.sqrt(dx*dx+dy*dy)
     var blocked = false
     
-    // Different options of being blocked
-//    var blockingCreature: Option[Monster] = None
-//    var blockedByTile = false
-//
-//    // For convenience
-//    def blocked: Boolean = blockingCreature.isDefined || blockedByTile
-    
-    val stepSize = 0.2
+    val stepSize = 0.5
     
     var subjectStuck = false
     for (cell <- world.getCellsUnderLocation(this)) {
@@ -75,7 +66,6 @@ class Location(var x: Int, var y: Int, val width: Int, val height: Int, val worl
       val dist = Math.hypot(this.x - path(i).centerX, this.y-path(i).centerY)
       if (Math.hypot(this.width/2.0, this.height/2.0) < dist) {
         val moveDistance = Math.min(dist, distance - totalDist)
-//        this.move(subject.getDirection(path(i)), moveDistance, subject)
         blocked = this.moveUntilBlocked(subject.getDirection(path(i)), moveDistance, subject)
         totalDist += moveDistance
       }

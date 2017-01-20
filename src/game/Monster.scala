@@ -20,7 +20,7 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
   val collidesWithPlayer = true
   val collidesWithMonsters = true
   
-  val baseSearchForNewPathCooldown = 2.0
+  val baseSearchForNewPathCooldown = 2.5
   var searchForNewPathCooldown = 0.0
   
   var path = Buffer[Cell]()

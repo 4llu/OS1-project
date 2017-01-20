@@ -5,8 +5,9 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * Created by Aleksanteri on 15/01/2017.
   */
-class FireballSpell extends Spell(-1, 0.25) {
+class FireballSpell extends Spell(0.25) {
 
+  var ammo = -1
   val soundEffect = "fireball" // FIXME Wrong sfx
 
   def projectiles(x:Int, y:Int, world: World, direction: Direction) = {
