@@ -4,6 +4,11 @@ import scala.collection.mutable.ArrayBuffer
 import scala.swing.event._
 import java.io.File
 import javax.imageio.ImageIO
+import scala.swing.Label
+import scala.swing.GridPanel
+import scala.swing.BoxPanel
+import scala.swing.Orientation
+import scala.swing.Frame
 
 //////////
 // MENU //
@@ -268,6 +273,12 @@ object gameOver extends Screen {
   
   this.renderList ++= this.buttons
   
+  val scorePanel = new BoxPanel(Orientation.Horizontal)
+  scorePanel.contents += new Label("Your score: "+game.points)
+  val gameOverFrame = new Frame()
+  gameOverFrame.contents =  scorePanel
+  gameOverFrame.visible = true
+  
   def run() = {
             
     while(this.buttons.filter (_.clicked).isEmpty) {
@@ -468,6 +479,16 @@ object highscores extends Screen {
   this.buttons = ArrayBuffer[Button](returnButton, musicButton, sfxButton)
   
   this.renderList ++= this.buttons
+  
+  private var scores = highscoreManager.getHighscores(Medium) 
+  private var panel = new BoxPanel(Orientation.Horizontal)
+  for (score <- scores) {
+    panel.contents += new Label(score._1 +" "+ score._2 +" "+ score._3)
+  }
+  val highscoreframe = new Frame()
+  highscoreframe.contents = panel 
+  highscoreframe.visible = true
+  
   
   def run() = {
     while(this.buttons.filter (_.clicked).isEmpty) {

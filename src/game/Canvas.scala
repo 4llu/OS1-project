@@ -4,6 +4,9 @@ import scala.swing._
 import scala.swing.event._
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
+import javax.swing.Icon
+import java.awt.GraphicsEnvironment
+import javax.swing.JCheckBox
 
 object Canvas extends Component {
   
@@ -40,6 +43,7 @@ object Canvas extends Component {
       for (renObject <- currentScreen.renderList) {
         g.drawImage(renObject.sprite, null, renObject.location.x-game.cameraX, renObject.location.y-game.cameraY)
       }
+      
   }
   
   def combineImages(image1: BufferedImage, image2: BufferedImage, top: Boolean) = {
@@ -55,4 +59,5 @@ object Canvas extends Component {
     }
     resultImage
   }
+  
 }
