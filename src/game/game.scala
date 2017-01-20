@@ -6,6 +6,8 @@ import java.awt.event._
 import scala.swing.event._
 import scala.util.Random
 import scala.collection.mutable.Buffer
+import java.io.File
+import javax.imageio.ImageIO
 
 object game extends Screen{
 
@@ -14,11 +16,15 @@ object game extends Screen{
     var player:Player = _
     
     // Point system
-    var points:Int = _
-    var pointsPrevious:Int = _
-    var combo:Int = _
+    var points:Int = 0
+    var pointsPrevious:Int = 0
+    var combo:Int = 1
     val comboResetTime = (4.0 * 1000).toInt
-    var enemyLastKilled:Long = _
+    var enemyLastKilled:Long = 0L
+    
+    // HUD stuff
+    var hpGreen = ImageIO.read(new File("media/UI/hp_green.png"))
+    var hpRed= ImageIO.read(new File("media/UI/hp_red.png"))
 
     //Lists
     var renderList: ArrayBuffer[C_Drawable] =  new ArrayBuffer[C_Drawable]()
