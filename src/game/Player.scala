@@ -69,12 +69,10 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
     this.weapon.fire(this.location.x, this.location.y, this.world, this.direction)
     // If all ammo is used up (-1 = unlimited ammo)
     if (this.weapon.ammo == 0) {
-      val weaponNum = this.curWeapon
-      // Return to basic spell
+      val oldWeapon = this.weapon
       this.curWeapon = 0
       this.weapon = this.weapons(this.curWeapon)
-      // Remove weapon from usable weapons
-      this.weapons.remove(weaponNum)
+      this.weapons -= oldWeapon
     }
   }
 
@@ -103,8 +101,9 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
       }
     }
     if (!weaponFound) {
-      if (spell == "FirebombSpell") this.weapons += new FirebombSpell()
+      this.weapons += (if (spell == "FirebombSpell") new FirebombSpell() else new IceShardSpell())
     }
+    println(this.weapons.length)
   }
 
   /* Load and separate player sprites */
