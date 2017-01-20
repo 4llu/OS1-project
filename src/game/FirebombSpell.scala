@@ -8,7 +8,7 @@ import scala.collection.mutable.ArrayBuffer
 class FirebombSpell() extends Spell(0.7f) {
 
   var ammo = 15
-  val soundEffect = "explosion"
+  val soundEffect = "fireball"
 
   def projectiles(x: Int, y: Int, world: World, direction: Direction): ArrayBuffer[Projectile] = {
     ArrayBuffer[Projectile](new Firebomb(x, y, world, direction, true, false))

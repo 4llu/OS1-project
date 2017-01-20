@@ -90,6 +90,7 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
       this.weapon = this.weapons(this.curWeapon)
       this.weapons -= oldWeapon
     }
+    println(this.weapon.ammo)
   }
 
   def nextWeapon(): Unit = {
