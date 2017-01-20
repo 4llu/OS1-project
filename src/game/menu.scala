@@ -50,10 +50,10 @@ object menu extends Screen {
       mapSelection
     } else if (highscoresButton.clicked){ // Highscores
       highscoresButton.clicked = false
-      menu
+      highscores
     } else if (instructionsButton.clicked){ // Instructions 
       instructionsButton.clicked = false
-      menu
+      instructions
     } else if (musicButton.clicked) { // Music mute
       musicButton.clicked = false
       // Update lists
@@ -341,8 +341,113 @@ object instructions extends Screen {
   },
   new C_Drawable() {
     // Instructions text
+    var sprite = ImageIO.read(new File("media/UI/instructions_text.png")) // FIXME images
+    var location = new Location(325, 40, sprite.getWidth, sprite.getHeight, null)
+  },
+  new C_Drawable() {
+    // Scroll background
+    var sprite = ImageIO.read(new File("media/UI/instruction_scroll.png")) // FIXME images
+    var location = new Location(282, 172, sprite.getWidth, sprite.getHeight, null)
+  })
+  
+  // Return button
+  private var returnButton = new Button(34, 592, ImageIO.read(new File("media/UI/return_button.png")), 
+      ImageIO.read(new File("media/UI/return_button_hover.png")))
+  
+  // Sound buttons
+  private var musicButton = new Button(10, 10, ImageIO.read(new File("media/UI/sound_button_music_on.png")), 
+      ImageIO.read(new File("media/UI/sound_button_music_on.png")))
+  private var sfxButton = new Button(60, 10, ImageIO.read(new File("media/UI/sound_button_sfx_on.png")), 
+      ImageIO.read(new File("media/UI/sound_button_sfx_on.png")))
+  private var musicButtonOff = new Button(10, 10, ImageIO.read(new File("media/UI/sound_button_music_off.png")), 
+      ImageIO.read(new File("media/UI/sound_button_music_off.png")))
+  private var sfxButtonOff = new Button(60, 10, ImageIO.read(new File("media/UI/sound_button_sfx_off.png")), 
+      ImageIO.read(new File("media/UI/sound_button_sfx_off.png")))
+  
+  this.buttons = ArrayBuffer[Button](returnButton, musicButton, sfxButton)
+  
+  this.renderList ++= this.buttons
+  
+  def run() = {
+    while(this.buttons.filter (_.clicked).isEmpty) {
+      this.draw(this.MS_PER_UPDATE)
+    }
+    if (returnButton.clicked){ // Return
+      returnButton.clicked = false
+      
+      menu
+    } else if (musicButton.clicked) { // Music mute
+      musicButton.clicked = false
+      // Update lists
+      this.renderList --= this.buttons
+      this.buttons -= musicButton
+      this.buttons += musicButtonOff
+      this.renderList ++= this.buttons
+      // Action
+      Sound.muteMusic = true
+      Sound.stopGameMusic()
+      Sound.stopMenuMusic()
+      
+      menu
+    } else if (sfxButton.clicked) { // SFX mute
+      sfxButton.clicked = false
+      // Update lists
+      this.renderList --= this.buttons
+      this.buttons -= sfxButton
+      this.buttons += sfxButtonOff
+      this.renderList ++= this.buttons
+      // Action
+      Sound.muteSfx = true // Mute
+      
+      menu
+    } else if (musicButtonOff.clicked) { // Music on
+      musicButtonOff.clicked = false
+      // Update lists
+      this.renderList --= this.buttons
+      this.buttons += musicButton
+      this.buttons -= musicButtonOff
+      this.renderList ++= this.buttons
+      // Action
+      Sound.muteMusic = false
+      if (Sound.inMenu) Sound.playMenuMusic() else Sound.playGameMusic()
+      
+      menu
+    } else if (sfxButtonOff.clicked) { // SFX on
+      sfxButtonOff.clicked = false
+      // Update lists
+      this.renderList --= this.buttons
+      this.buttons += sfxButton
+      this.buttons -= sfxButtonOff
+      this.renderList ++= this.buttons
+      // Action
+      Sound.muteSfx = false
+      
+      menu
+    } else {
+      menu
+    }
+  }
+}
+
+//////////////////
+// Instructions //
+//////////////////
+
+object highscores extends Screen {
+  var renderList = ArrayBuffer[C_Drawable](new C_Drawable() {
+    // Background
+    var sprite = ImageIO.read(new File("media/UI/UI_background.png"))
+    var location = new Location(0, 0, sprite.getWidth, sprite.getHeight, null)
+  },
+  new C_Drawable() {
+    // Highscores text
     var sprite = ImageIO.read(new File("media/UI/highscores_text.png")) // FIXME images
-    var location = new Location(100, 100, sprite.getWidth, sprite.getHeight, null)
+    var location = new Location(335, 40, sprite.getWidth, sprite.getHeight, null)
+  },
+  new C_Drawable() {
+    // Scroll background
+    var sprite = ImageIO.read(new File("media/UI/instruction_scroll.png")) // FIXME images
+    var location = new Location(282, 172, sprite.getWidth, sprite.getHeight, null)
   })
   
   // Return button
