@@ -14,6 +14,7 @@ object game extends Screen{
     // Basics
     var world:World = _
     var player:Player = _
+    var hpBar: Healthbar = _
     
     // Point system
     var points:Int = 0
@@ -22,10 +23,6 @@ object game extends Screen{
     val comboResetTime = (4.0 * 1000).toInt
     var enemyLastKilled:Long = 0L
     
-    // HUD stuff
-    var hpGreen = ImageIO.read(new File("media/hp_green.png"))
-    var hpRed= ImageIO.read(new File("media/hp_red.png"))
-
     //Lists
     var renderList: ArrayBuffer[C_Drawable] =  new ArrayBuffer[C_Drawable]()
     var updateList: ArrayBuffer[C_Updatable] = new ArrayBuffer[C_Updatable]()
@@ -48,10 +45,11 @@ object game extends Screen{
     
     val random = new Random()
 
-  /* Initialize the world with the right world and difficulty */
+    /* Initialize the world with the right world and difficulty */
     def init(worldNum: Int, dif: Difficulty): Unit = {
-      world = new World(worldNum) // Load the map
-      player = new Player(world.width/2, world.height/2, world)
+      this.world = new World(worldNum) // Load the map
+      this.player = new Player(world.width/2, world.height/2, world)
+      this.hpBar = new Healthbar(this.world)
       
       // Set camera position
       this.cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2
@@ -70,16 +68,19 @@ object game extends Screen{
         (Key.W, false), (Key.A, false), (Key.S, false), (Key.D, false), (Key.Space, false))
       
       // Add the map and player to renderlist
-      renderList ++= world.backgroundTiles.flatten
-      renderList ++= world.tiles.flatten.filter(_.tileType != "extension")
-      renderList += player
+      this.renderList ++= world.backgroundTiles.flatten
+      this.renderList ++= world.tiles.flatten.filter(_.tileType != "extension")
+      this.renderList += player
+      
+      // Add hp bar to relevant lists
+      this.addGameObject(this.hpBar)
       
       // Reset point system
-      points = 0
-      pointsPrevious = 0
-      combo = 1
-      enemyLastKilled = 0L
-      waveNumber = 0
+      this.points = 0
+      this.pointsPrevious = 0
+      this.combo = 1
+      this.enemyLastKilled = 0L
+      this.waveNumber = 0
       this.difficulty = dif
     }
     
