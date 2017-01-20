@@ -7,7 +7,7 @@ import scala.collection.mutable.ArrayBuffer
   */
 class FireballSpell extends Spell(-1, 0.25) {
 
-  val soundEffect = "fireball"
+  val soundEffect = "fireball" // FIXME Wrong sfx
 
   def projectiles(x:Int, y:Int, world: World, direction: Direction) = {
     ArrayBuffer[Projectile](new Fireball(x, y, world, direction, true, false))

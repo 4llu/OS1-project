@@ -17,11 +17,11 @@ class Fireball(x:Int, y:Int, world:World, var direction: Direction, hitsMonsters
 
 //  override def update(timeElapsed: Long): Unit = {
 //    super.update(timeElapsed)
+//
 //    if (this.blockedInfo._1) {
 //      // Damage an enemy if one is hit
 //      this.blockedInfo._2.foreach(_.takeDamage(this.damage))
 //      this.remove = true
 //    }
 //  }
-
 }

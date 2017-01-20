@@ -13,13 +13,16 @@ abstract class Spell(var ammo: Int, attackSpeed: Double) {
 
   def projectiles(x:Int, y:Int, world:World, direction: Direction): ArrayBuffer[Projectile]
   
-  def fire(x:Int, y:Int, world: World, direction: Direction) = {
+  def fire(x:Int, y:Int, world: World, direction: Direction): Unit = {
     if (this.canFire) {
+      // Play sfx
       Sound.playSoundEffect(this.soundEffect)
       val projectiles = this.projectiles(x, y, world, direction)
       game.updateList ++= projectiles
       game.renderList ++= projectiles
       this.lastFired = System.currentTimeMillis
+      // If not unlimited ammo, use one ammo
+      if (this.ammo != -1) this.ammo -= 1
     }
   }
 
