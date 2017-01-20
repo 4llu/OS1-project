@@ -9,7 +9,7 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * Created by Allu on 17/01/2017.
   */
-class Penguin(x:Int, y:Int, world:World) extends Monster(x:Int, y:Int, world:World, 0.1, 100, 32) {
+class Penguin(x:Int, y:Int, world:World) extends Monster(x:Int, y:Int, world:World, 0.08, 100, 32) {
   var weapon: Spell = new MeleeSpell(20)
   
   this.loadSprites()

@@ -15,7 +15,7 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
   // Sprites
   this.loadSprites()
   var direction:Direction = South
-  var sprite = spritesByDirection.get(this.direction).get(1)
+  var sprite = spritesByDirection(this.direction)(1)
   val baseSpriteChangeCooldown = 0.1
 
   // Location and moving
