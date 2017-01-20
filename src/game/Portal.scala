@@ -24,20 +24,33 @@ class Portal(tile:Tile, waveNumber:Int, difficulty:Difficulty) extends C_Drawabl
   private val baseSpawnCooldown = 3.0
   private var spawnCooldown = 2.0
 
+  private var waveSize = 0
+  private var monsterRatio = ArrayBuffer[Double]()
+
   private var monstersToSpawn = ArrayBuffer[Monster]()
-  
+
+  // Determine wave size and monster ratio
   if (waveNumber < 5) {         // Waves 0-5
-    for (i <- 0 until (waveNumber*1.5+1).toInt) {
-      monstersToSpawn += new Penguin(this.location.x, this.location.y, this.location.world)
-    }
+    this.waveSize = (waveNumber*1.5+1).toInt
+    monsterRatio = ArrayBuffer[Double](1, 0, 0)
   } else if (waveNumber < 10) { // Waves 6-10
-    for (i <- 0 until (waveNumber * 0.75 + 1).toInt) {
-      monstersToSpawn += new Penguin(this.location.x, this.location.y, this.location.world)
-    }
+    this.waveSize = (waveNumber * 0.75 + 1).toInt
+    monsterRatio = ArrayBuffer[Double](0.8, 0.2, 0)
   } else {                      // The rest of the waves
-      for (i <- 0 until (waveNumber * 0.5 + 1).toInt) {
-        monstersToSpawn += new Penguin(this.location.x, this.location.y, this.location.world)
+    this.waveSize = (waveNumber * 0.5 + 1).toInt
+    monsterRatio = ArrayBuffer[Double](0.5, 0.3, 0.2)
+  }
+
+  // Create monsters
+  for (tier <- 0 to 2) {
+    for (i <- 0 until (this.waveSize * this.monsterRatio(tier)).toInt) {
+      val monster = tier match {
+        case 0 => new Goblin(this.location.x, this.location.y, this.location.world)
+        case 1 => new Orc(this.location.x, this.location.y, this.location.world)
+        case 2 => new Penguin(this.location.x, this.location.y, this.location.world)
       }
+      this.monstersToSpawn += monster
+    }
   }
   
   def update(timeElapsed:Long) = {
@@ -53,7 +66,7 @@ class Portal(tile:Tile, waveNumber:Int, difficulty:Difficulty) extends C_Drawabl
     // Monster spawning
     if (spawnCooldown > 0) { // On cooldown
       spawnCooldown -= timeElapsed/1000.0
-    } else if (!monstersToSpawn.isEmpty){ // Spawn monster
+    } else if (monstersToSpawn.nonEmpty){ // Spawn monster
       spawnCooldown = baseSpawnCooldown + game.random.nextDouble()*0.2-0.1
       game.addMonster(monstersToSpawn(0))
       monstersToSpawn = monstersToSpawn.tail
