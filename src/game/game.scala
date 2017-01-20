@@ -23,8 +23,8 @@ object game extends Screen{
     var enemyLastKilled:Long = 0L
     
     // HUD stuff
-    var hpGreen = ImageIO.read(new File("media/UI/hp_green.png"))
-    var hpRed= ImageIO.read(new File("media/UI/hp_red.png"))
+    var hpGreen = ImageIO.read(new File("media/hp_green.png"))
+    var hpRed= ImageIO.read(new File("media/hp_red.png"))
 
     //Lists
     var renderList: ArrayBuffer[C_Drawable] =  new ArrayBuffer[C_Drawable]()
