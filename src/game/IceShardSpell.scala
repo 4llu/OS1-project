@@ -8,7 +8,7 @@ import scala.collection.mutable.ArrayBuffer
 class IceShardSpell extends Spell(1.0) {
 
   var ammo = 40
-  val soundEffect = "fireball" // FIXME Wrong sfx
+  val soundEffect = "icespell_sound"
 
   def projectiles(x:Int, y:Int, world: World, direction: Direction) = {
     ArrayBuffer[Projectile](new IceShard(x, y, world, direction, true, false))
