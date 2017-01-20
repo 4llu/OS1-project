@@ -13,5 +13,8 @@ class SpellDrop (x: Int, y: Int, world: World,val spell: String) extends Drop(x,
   val collidesWithMonsters = false
   val collidesWithPlayer = false
   
-  override def pickedUp(): Unit = game.player.pickUpSpell(this.spell, this.ammoIncrease)
+  override def pickedUp(): Unit = {
+    super.pickedUp()
+    game.player.pickUpSpell(this.spell, this.ammoIncrease)
+  }
 }

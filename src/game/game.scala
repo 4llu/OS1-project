@@ -25,7 +25,7 @@ object game extends Screen{
     var updateList: ArrayBuffer[C_Updatable] = new ArrayBuffer[C_Updatable]()
     var monsterList: ArrayBuffer[Monster] = new ArrayBuffer[Monster]()
     var portalList: ArrayBuffer[Portal] = new ArrayBuffer[Portal]()
-    val dropList = ArrayBuffer[Drop]()
+    var dropList = ArrayBuffer[Drop]()
     private var inputList: ArrayBuffer[(Key.Value, Boolean)] = new ArrayBuffer[(Key.Value, Boolean)]()
     
     // Input
@@ -98,8 +98,11 @@ object game extends Screen{
             
             // Wave management
             if (this.monsterList.isEmpty && this.portalList.isEmpty) {
+              // Start new wave
               this.waveNumber += 1
-              startWave()
+              this.startWave()
+              // Drops spawn at the start of the wave
+              this.dropItems()
             }
 
             while (lag >= this.MS_PER_UPDATE && !this.gameEnded) {
@@ -129,6 +132,7 @@ object game extends Screen{
       this.renderList = this.renderList.filter(!_.remove)
       this.monsterList = this.monsterList.filter(!_.remove)
       this.portalList = this.portalList.filter(!_.remove)
+      this.dropList = this.dropList.filter(!_.remove)
       
       // Update combo counter
       val curTime = System.currentTimeMillis() 
@@ -164,7 +168,7 @@ object game extends Screen{
   def gameEnded: Boolean = this.player.isDead
 
   /* Start a new wave */
-  def startWave() = {
+  def startWave(): Unit = {
     // Determine number of portals based on wave number
     val portalCount = if (this.waveNumber < 5) 2 else 3
 
@@ -177,21 +181,42 @@ object game extends Screen{
       // Check if valid location
       if (this.world.tiles(y)(x).walkable && this.world.tiles(y)(x+1).walkable &&
           this.world.tiles(y+1)(x).walkable && this.world.tiles(y+1)(x+1).walkable) {
-        // Add portal
-        this.portalList.append(new Portal(this.world.tiles(y)(x), this.waveNumber, this.difficulty))
+        // Add portal to lists
+        this.addPortal(new Portal(this.world.tiles(y)(x), this.waveNumber, this.difficulty))
         portals += 1
       }
     }
-    // Add portals to lists
-    this.updateList ++= this.portalList
-    this.renderList ++= this.portalList
   }
   
-  def dropItems() {
-      
+  /* Drop items */
+  def dropItems(): Unit = {
+    // Determine number of drops based on wave number
+    val dropNum = if (this.waveNumber < 5) 2 else 3
+    
+    // Create drops
+    var drops = 0
+    while(drops < dropNum){
+      // Portal location
+      val x = random.nextInt(this.world.map(0).length-1)
+      val y = random.nextInt(this.world.map.size-1)
+      // Check if valid location
+      if (this.world.tiles(y)(x).walkable && this.world.tiles(y)(x+1).walkable &&
+          this.world.tiles(y+1)(x).walkable && this.world.tiles(y+1)(x+1).walkable) {
+        // Select random drop
+        val randomDrop = if (this.random.nextDouble() < 0.3) new SpellDrop(x, y, this.world, "FirebombSpell")
+                          else if (this.random.nextDouble() < 0.6) new SpellDrop(x, y, this.world, "IceShardSpell")
+                          else new HealthDrop(x, y, this.world)
+        
+        // Add to lists
+        this.addDrop(randomDrop)
+        
+        drops += 1
+      }
+    }
+    
   }
   
-  def updateCells(list:Buffer[C_Drawable]) = {
+  def updateCells(list:Buffer[C_Drawable]): Unit = {
     for (obj <- list.filter(_.remove)){
       for (cell <- this.world.getCellsUnderLocation(obj.location)) {
         cell.creatures = cell.creatures.filter(_ != obj)
@@ -201,9 +226,26 @@ object game extends Screen{
   }
 
   /* Add a monster to all relevant lists*/
-  def addMonster(monster:Monster) = {
-      game.renderList += monster
-      game.updateList += monster
-      game.monsterList += monster
+  def addMonster(monster:Monster): Unit = {
+    this.addGameObject(monster)
+    game.monsterList += monster
+  }
+  
+  /* Add a portal to all relevant lists*/
+  def addPortal(portal:Portal): Unit = {
+    this.addGameObject(portal)
+    game.portalList += portal
+  }
+  
+  /* Add a drop to all relevant lists*/
+  def addDrop(drop:Drop): Unit = {
+    this.addGameObject(drop)
+    game.dropList += drop
+  }
+  
+  /* Add a game object to the update and render lists */
+  def addGameObject(go: C_Updatable): Unit = {
+      game.renderList += go
+      game.updateList += go
   }
 }

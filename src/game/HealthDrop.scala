@@ -13,5 +13,8 @@ class HealthDrop(x: Int, y: Int, world: World) extends Drop(x, y, world) {
   val collidesWithMonsters = false
   val collidesWithPlayer = false
   
-  override def pickedUp(): Unit = game.player.heal(this.healSize)
+  override def pickedUp(): Unit = {
+    super.pickedUp()
+    game.player.heal(this.healSize)
+  }
 }
