@@ -12,43 +12,48 @@ object game extends Screen{
     var world:World = _
     var player:Player = _
     
+    // Point system
     var points:Int = _
     var pointsPrevious:Int = _
     var combo:Int = _
     val comboResetTime = (4.0 * 1000).toInt
     var enemyLastKilled:Long = _
 
-    var renderList = new ArrayBuffer[C_Drawable]()
-    var updateList = new ArrayBuffer[C_Updatable]()
-    var monsterList = new ArrayBuffer[Monster]()
-    private var inputList = new ArrayBuffer[(Key.Value, Boolean)]()
-    
-    var buttons = ArrayBuffer[Button]()
+    //Lists
+    var renderList: ArrayBuffer[C_Drawable] = _
+    var updateList: ArrayBuffer[C_Updatable] = _
+    var monsterList: ArrayBuffer[Monster] = _
+    var portalList: ArrayBuffer[Portal] = _
+    private var inputList: ArrayBuffer[(Key.Value, Boolean)] = _
     
     val keysPressed = scala.collection.mutable.Map[Key.Value, Boolean](
         (Key.W, false), (Key.A, false), (Key.S, false), (Key.D, false), (Key.Space, false))
     
+    // Camera location
     var cameraX = 0
     var cameraY = 0
     
     var waveNumber:Int = _
     var difficulty: Difficulty = _
     
-    var waveOngoing:Boolean = _
-    
     val random = new Random()
 
+  /* Initialize the world with the right world and difficulty */
     def init(worldNum: Int, dif: Difficulty): Unit = {
-      world = new World(worldNum)
+      world = new World(worldNum) // Load the map
       player = new Player(world.width/2, world.height/2, world)
       
+    // Set camera position
       cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2
       cameraY = player.location.y+player.sprite.getHeight/2-Canvas.height/2
       
       renderList = new ArrayBuffer[C_Drawable]()
       updateList = new ArrayBuffer[C_Updatable]()
       monsterList = new ArrayBuffer[Monster]()
+      portalList = new ArrayBuffer[Portal]()
+      inputList = new ArrayBuffer[(Key.Value, Boolean)]()
       
+    // Add the map and player to renderlist
       renderList ++= world.backgroundTiles.flatten
       renderList ++= world.tiles.flatten.filter(_.tileType != "extension")
       renderList += player
@@ -58,7 +63,6 @@ object game extends Screen{
       combo = 1
       enemyLastKilled = 0L
       waveNumber = 0
-      waveOngoing = false
       this.difficulty = dif
     }
     
@@ -66,9 +70,11 @@ object game extends Screen{
         
         var previous: Long = System.currentTimeMillis
         var lag = 0.0
-
+    
+        // Start game music
         Sound.playGameMusic()
-
+    
+        // Main game loop
         while (!this.gameEnded) {
             val current = System.currentTimeMillis
             var elapsed = current - previous
@@ -78,33 +84,38 @@ object game extends Screen{
             player.update(elapsed)
             this.processInput(elapsed)
             
-            if (this.monsterList.isEmpty && !waveOngoing) {
-              this.waveOngoing = true
+            // Wave management
+            if (this.monsterList.isEmpty && this.portalList.isEmpty) {
               this.waveNumber += 1
               startWave()
             }
 
-            while (lag >= this.MS_PER_UPDATE && !this.gameEnded) {
-                this.update(elapsed)
-                lag -= this.MS_PER_UPDATE
-            }
-
-//            this.draw(lag / MS_PER_UPDATE)
+      //      while (lag >= this.MS_PER_UPDATE && !this.gameEnded) {
+      //          this.update(elapsed)
+      //          lag -= this.MS_PER_UPDATE
+      //      }
+      //      this.draw(lag / MS_PER_UPDATE)
+      
+            // Update and draw all game objects
+            this.update(elapsed)
             this.draw(this.MS_PER_UPDATE)
         }
 
+        // Game over, return to menu
         Sound.stopGameMusic()
+        cameraX = 0
+        cameraY = 0
         menu
     }
+  /* Update all game Objects */
     def update(timeElapsed: Long): Unit = {
       // Update lists
       this.updateList.foreach(_.update(timeElapsed))
       updateCells(updateList.toBuffer[C_Drawable])
       this.updateList = this.updateList.filter(!_.remove)
-      updateCells(renderList.toBuffer[C_Drawable])
       this.renderList = this.renderList.filter(!_.remove)
-      updateCells(monsterList.toBuffer[C_Drawable])
       this.monsterList = this.monsterList.filter(!_.remove)
+      this.portalList = this.portalList.filter(!_.remove)
       
       // Update combo counter
       val curTime = System.currentTimeMillis() 
@@ -116,46 +127,50 @@ object game extends Screen{
       else if (this.combo != 1 && curTime - this.enemyLastKilled > this.comboResetTime) {
         this.combo = 1
       }
+
     }
 
-    def processInput(timeElapsed: Long): Unit = {
-      var input = ""
-      for ((key, pressed) <- inputList) {
-        keysPressed += key -> pressed
+  def processInput(timeElapsed: Long): Unit = {
+    for ((key, pressed) <- inputList) {
+      keysPressed += key -> pressed
+    }
+
+    // Camera follows the player
+    cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2
+    cameraY = player.location.y+player.sprite.getHeight/2-Canvas.height/2
+    inputList.clear()
+  }
+
+  /* Game end condition */
+  def gameEnded: Boolean = this.player.isDead
+
+  def takeInput(key: Key.Value, pressed: Boolean){
+    inputList += ((key, pressed))
+  }
+
+  /* Start a new wave */
+  def startWave() = {
+    // Determine number of portals based on wave number
+    val portalCount = if (this.waveNumber < 5) 2 else 3
+
+    // Create portals
+    var portals = 0
+    while(portals < portalCount){
+      // Portal location
+      val x = random.nextInt(this.world.map(0).length-1)
+      val y = random.nextInt(this.world.map.size-1)
+      // Check if valid location
+      if (this.world.tiles(y)(x).walkable && this.world.tiles(y)(x+1).walkable &&
+          this.world.tiles(y+1)(x).walkable && this.world.tiles(y+1)(x+1).walkable) {
+        // Add portal
+        this.portalList.append(new Portal(this.world.tiles(y)(x), this.waveNumber, this.difficulty))
+        portals += 1
       }
-      
-      cameraX = player.location.x+player.sprite.getWidth/2-Canvas.width/2
-      cameraY = player.location.y+player.sprite.getHeight/2-Canvas.height/2
-      inputList.clear()
     }
-    
-    def gameEnded: Boolean = this.player.isDead
-    
-    def takeInput(key: Key.Value, pressed: Boolean){
-      inputList += ((key, pressed))
-    }
-    
-    def startWave() = {
-      val portalCount = if (this.waveNumber < 5) 2 else 3 
-      var portals = 0
-      while(portals < portalCount){
-        val x = random.nextInt(this.world.map(0).length-1)
-        val y = random.nextInt(this.world.map.size-1)
-        if (this.world.tiles(y)(x).walkable && this.world.tiles(y)(x+1).walkable &&
-            this.world.tiles(y+1)(x).walkable && this.world.tiles(y+1)(x+1).walkable) {
-          val portal = new Portal(this.world.tiles(y)(x), this.waveNumber, this.difficulty)
-          this.renderList += portal
-          this.updateList += portal
-          portals += 1
-        }
-      }
-    }
-    def addMonster(monster:Monster) = {
-        game.renderList += monster
-        game.updateList += monster
-        game.monsterList += monster
-    }
-    
+    // Add portals to lists
+    this.updateList ++= this.portalList
+    this.renderList ++= this.portalList
+  }
     def updateCells(list:Buffer[C_Drawable]) = {
       for (obj <- list.filter(_.remove)){
         for (cell <- this.world.getCellsUnderLocation(obj.location)) {
@@ -164,4 +179,11 @@ object game extends Screen{
         }
       }
     }
+
+  /* Add a monster to all relevant lists*/
+  def addMonster(monster:Monster) = {
+      game.renderList += monster
+      game.updateList += monster
+      game.monsterList += monster
+  }
 }

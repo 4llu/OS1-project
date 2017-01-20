@@ -20,12 +20,20 @@ class Location(var x: Int, var y: Int, val width: Int, val height: Int, val worl
     this.y + this.height > other.y
   }
     
-  def moveUntilBlocked(direction: Direction, speed: Double, timeElapsed: Long, subject: C_Locatable):Boolean = {
+  def moveUntilBlocked(direction: Direction, speed: Double, timeElapsed: Long, subject: C_Updatable):Boolean = {
+//  def moveUntilBlocked(direction: Direction, speed: Double, timeElapsed: Long):(Boolean, Option[Monster], Boolean) = {
     val dx = direction.xStep*speed*timeElapsed
     val dy = direction.yStep*speed*timeElapsed
     var resultLocation = this
-    var blocked = false
     val distance = Math.sqrt(dx*dx+dy*dy)
+    var blocked = false
+    
+    // Different options of being blocked
+//    var blockingCreature: Option[Monster] = None
+//    var blockedByTile = false
+//
+//    // For convenience
+//    def blocked: Boolean = blockingCreature.isDefined || blockedByTile
     
     var i = 1
     val stepSize = 0.2
@@ -34,11 +42,24 @@ class Location(var x: Int, var y: Int, val width: Int, val height: Int, val worl
           (this.y + direction.yStep*i*stepSize+0.5).toInt, this.width, this.height, this.world)
       breakable {
         for (cell <- this.world.getCellsUnderLocation(newLocation)) {
-          if ((!cell.walkable || !cell.creatures.filter(_ != subject).isEmpty) && !cell.creatures.contains(subject)) {
+          if (!cell.walkable || (!cell.creatures.contains(subject) &&
+              (subject.collidesWithPlayer && cell.creatures.contains(game.player)) ||
+              (subject.collidesWithMonsters && !cell.creatures.filter(_ != subject).filter(_ != game.player).isEmpty))) {
             blocked = true
             break
           }
         }
+//      // Blocked by a monster
+//      for (monster <- game.monsterList.filter(!_.moving)) {
+//        if (!this.overlapsWith(monster.location) && newLocation.overlapsWith(monster.location)){
+//          blockingCreature = Some(monster)
+//        }
+//      }
+//      // Blocked by a tile
+//      if (this.world.isWalkable(newLocation) && !blocked) {
+//        resultLocation = newLocation
+//      } else {
+//        blockedByTile = true
       }
       if (!blocked) resultLocation = newLocation
       i += 1
@@ -50,5 +71,6 @@ class Location(var x: Int, var y: Int, val width: Int, val height: Int, val worl
     this.x = resultLocation.x
     this.y = resultLocation.y
     blocked
+//    (blocked, blockingCreature, blockedByTile)
   }
 }

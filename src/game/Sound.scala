@@ -16,33 +16,44 @@ object Sound {
 
   val random = new Random()
 
-  val menuMusic: Clip = this.getSound("menu_music", -10.0f)
-  val gameMusic: ArrayBuffer[Clip] = ArrayBuffer[Clip]()
-  this.gameMusic += this.getSound("game_music_1", -10.0f)
-  var curGameMusic = this.gameMusic(random.nextInt(this.gameMusic.length))
+  // Mute options
+  val muteSfx = false
+  val muteMusic = false
 
+  // Preload musics
+  val menuMusic: Clip = this.getSound("menu_music", -10.0f)
+  val gameMusic: Clip = this.getSound("game_music_1", -10.0f)
+
+  /* Start menu music if not playing yet. Also stop game music if it's playing. */
   def playMenuMusic(): Unit = {
-    if (this.curGameMusic.isActive) this.curGameMusic.stop()
-    if (!this.menuMusic.isActive) this.menuMusic.loop(Clip.LOOP_CONTINUOUSLY)
+    if (!this.muteMusic) {
+      this.stopGameMusic()
+      if (!this.menuMusic.isActive) this.menuMusic.loop(Clip.LOOP_CONTINUOUSLY)
+    }
   }
 
   def stopMenuMusic(): Unit = {
-    this.menuMusic.stop()
+    if (this.menuMusic.isActive) this.menuMusic.stop()
   }
 
+  /* Start game music if not playing yet. Also stop menu music if it's playing. */
   def playGameMusic(): Unit = {
-    if (this.menuMusic.isActive) this.menuMusic.stop()
-    if (!this.curGameMusic.isActive) this.curGameMusic.loop(Clip.LOOP_CONTINUOUSLY)
+    if (!this.muteMusic) {
+      this.stopMenuMusic()
+      if (!this.gameMusic.isActive) this.gameMusic.loop(Clip.LOOP_CONTINUOUSLY)
+    }
   }
 
   def stopGameMusic(): Unit = {
-    this.curGameMusic.stop()
+    if (this.gameMusic.isActive) this.gameMusic.stop()
   }
 
+  /* Play SFX with the given name. Name must be the same as the SFX filename without the filename extension */
   def playSoundEffect(name: String): Unit = {
-    this.getSound(name, -20.0f).start()
+    if (!this.muteSfx) this.getSound("sfx/" + name, -20.0f).start()
   }
 
+  /* Get a sound clip by name */
   def getSound(soundName: String, volumeDB: Float): Clip = {
     val audioInputStream: AudioInputStream = AudioSystem.getAudioInputStream(new File("media/sounds/" + soundName + ".wav").getAbsoluteFile());
     val clip = AudioSystem.getClip();

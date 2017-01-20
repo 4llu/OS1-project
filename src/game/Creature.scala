@@ -6,13 +6,15 @@ import java.awt.image.BufferedImage
   * Created by Allu on 10/11/2016.
   */
 abstract class Creature(x: Int, y: Int, world: World, val speed: Double, val maxHp: Int) extends C_Updatable {
+  // Stats
   var hp = maxHp
   var weapon: Spell
 
   var sprite: BufferedImage
   var location: Location
   var direction: Direction
-  
+
+  // Sprite animation config
   protected val baseSpriteChangeCooldown: Double
   protected var spriteChangeCooldown:Double = 0
   protected var spriteIndex = 0
@@ -23,9 +25,7 @@ abstract class Creature(x: Int, y: Int, world: World, val speed: Double, val max
 
   def isDead(): Boolean = this.hp <= 0
   
-  def takeDamage(damage: Int): Unit = {
-    this.hp -= damage
-  }
+  def takeDamage(damage: Int): Unit = this.hp -= damage
   
   def moveUntilBlocked(timeElapsed: Long) = {
     this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed, this)

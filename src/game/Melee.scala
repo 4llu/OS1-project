@@ -4,7 +4,8 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
-class Melee (x:Int, y:Int, world:World, var direction: Direction, val damage: Int) extends Projectile(x, y, world) {
+class Melee (x:Int, y:Int, world:World, var direction: Direction, val damage: Int, hitsMonsters: Boolean, hitsPlayer: Boolean) 
+  extends Projectile(x, y, world, hitsMonsters, hitsPlayer) {
   var speed = 0.3f
   var sprite: BufferedImage = ImageIO.read(new File("media/fireball.png")) // FIXME wrong sprite
   var location = new Location(x, y, sprite.getWidth, sprite.getHeight, world)
