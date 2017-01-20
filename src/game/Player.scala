@@ -1,6 +1,6 @@
 package game
 
-import scala.collection.mutable.{ArrayBuffer, Buffer}
+import scala.collection.mutable.ArrayBuffer
 import java.io.File
 import javax.imageio.ImageIO
 import scala.swing.event.Key
@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage
 
 class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, world: World, 0.2, 100) {
   // Weapons
-  val weapons = Buffer(new FireballSpell())
+  val weapons = ArrayBuffer[Spell](new FireballSpell())
   var curWeapon = 0
   var weapon: Spell = this.weapons(this.curWeapon)
 
@@ -88,6 +88,23 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
     this.curWeapon -= 1
     if (this.curWeapon == -1) this.curWeapon = this.weapons.length - 1
     this.weapon = this.weapons(this.curWeapon)
+  }
+  
+  /* Heal, but not over max hp */
+  def heal(healSize: Int): Unit = this.hp = (this.hp + healSize).min(this.maxHp)
+  
+  /* Pick up a spell scroll and either gain it, or increase its ammo */
+  def pickUpSpell(spell: String, ammoIncrease: Int): Unit = {
+    var weaponFound = false
+    for (weapon <- this.weapons) {
+      if (weapon.toString == spell) {
+        this.weapon.ammo += ammoIncrease
+        weaponFound = true
+      }
+    }
+    if (!weaponFound) {
+      if (spell == "FirebombSpell") this.weapons += new FirebombSpell()
+    }
   }
 
   /* Load and separate player sprites */

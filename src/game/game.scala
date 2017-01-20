@@ -25,6 +25,7 @@ object game extends Screen{
     var monsterList: ArrayBuffer[Monster] = _
     var portalList: ArrayBuffer[Portal] = _
     private var inputList: ArrayBuffer[(Key.Value, Boolean)] = _
+    val dropList = ArrayBuffer[Drop]()
     
     val keysPressed = scala.collection.mutable.Map[Key.Value, Boolean](
         (Key.W, false), (Key.A, false), (Key.S, false), (Key.D, false), (Key.Space, false))
@@ -171,14 +172,19 @@ object game extends Screen{
     this.updateList ++= this.portalList
     this.renderList ++= this.portalList
   }
-    def updateCells(list:Buffer[C_Drawable]) = {
-      for (obj <- list.filter(_.remove)){
-        for (cell <- this.world.getCellsUnderLocation(obj.location)) {
-          cell.creatures = cell.creatures.filter(_ != obj)
-          cell.projectiles = cell.projectiles.filter(_ != obj)
-        }
+  
+  def dropItem(x: Int, y: Int) {
+      
+  }
+  
+  def updateCells(list:Buffer[C_Drawable]) = {
+    for (obj <- list.filter(_.remove)){
+      for (cell <- this.world.getCellsUnderLocation(obj.location)) {
+        cell.creatures = cell.creatures.filter(_ != obj)
+        cell.projectiles = cell.projectiles.filter(_ != obj)
       }
     }
+  }
 
   /* Add a monster to all relevant lists*/
   def addMonster(monster:Monster) = {
