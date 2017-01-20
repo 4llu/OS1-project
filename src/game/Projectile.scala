@@ -15,14 +15,16 @@ abstract class Projectile(x:Int, y:Int, world:World, val hitsMonsters: Boolean, 
   val collidesWithMonsters = false
 
   def update(timeElapsed: Long): Unit = {
-    val blocked = this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed, this)
+    val blocked = this.location.moveUntilBlocked(this.direction, this.speed*timeElapsed, this)
     for (cell <- this.world.getCellsUnderLocation(this.location)) {
       if (!cell.projectiles.contains(this)) cell.projectiles += this
-      for (creature <- cell.creatures) {
-        if ((creature == game.player && this.hitsPlayer) || 
-            (creature != game.player && this.hitsMonsters)) {
-          creature.takeDamage(this.damage)
-          this.remove = true
+      if (!this.remove) { 
+        for (creature <- cell.creatures) {
+          if ((creature == game.player && this.hitsPlayer) || 
+              (creature != game.player && this.hitsMonsters)) {
+            creature.takeDamage(this.damage)
+            this.remove = true
+          }
         }
       }
     }

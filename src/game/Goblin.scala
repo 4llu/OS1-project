@@ -12,7 +12,7 @@ class Goblin(x:Int, y:Int, world:World) extends Monster(x:Int, y:Int, world:Worl
   this.loadSprites()
   var sprite = spritesByDirection.get(South).get(1)
   var location = new Location(x, y, sprite.getWidth, sprite.getHeight, world)
-  var direction = this.playerDirection()
+  var direction = this.getDirection(game.player)
   
   val deathAnimationLength = 0
   

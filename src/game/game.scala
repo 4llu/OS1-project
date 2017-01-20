@@ -157,13 +157,17 @@ object game extends Screen{
     var portals = 0
     while(portals < portalCount){
       // Portal location
-      val x = random.nextInt(this.world.map(0).length-1)
-      val y = random.nextInt(this.world.map.size-1)
+      val x = random.nextInt(this.world.width)
+      val y = random.nextInt(this.world.height)
       // Check if valid location
-      if (this.world.tiles(y)(x).walkable && this.world.tiles(y)(x+1).walkable &&
-          this.world.tiles(y+1)(x).walkable && this.world.tiles(y+1)(x+1).walkable) {
+      val portal = new Portal(x, y, this.world, this.waveNumber, this.difficulty)
+      var locationBlocked = false
+      for (cell <- this.world.getCellsUnderLocation(portal.location)) {
+        if (!cell.walkable) locationBlocked = true
+      }
+      if (!locationBlocked) {
         // Add portal
-        this.portalList.append(new Portal(this.world.tiles(y)(x), this.waveNumber, this.difficulty))
+        this.portalList.append(portal)
         portals += 1
       }
     }

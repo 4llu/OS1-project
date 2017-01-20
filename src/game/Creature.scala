@@ -1,6 +1,7 @@
 package game
 
 import java.awt.image.BufferedImage
+import scala.collection.mutable.Buffer
 
 /**
   * Created by Allu on 10/11/2016.
@@ -28,11 +29,12 @@ abstract class Creature(x: Int, y: Int, world: World, val speed: Double, val max
   def takeDamage(damage: Int): Unit = this.hp -= damage
   
   def moveUntilBlocked(timeElapsed: Long) = {
-    this.location.moveUntilBlocked(this.direction, this.speed, timeElapsed, this)
+    this.location.moveUntilBlocked(this.direction, this.speed*timeElapsed, this)
     for (cell <- this.world.getCellsUnderLocation(this.location)) {
       if (!cell.creatures.contains(this)) cell.creatures += this
     }
   }
+  
   
   protected def walkAnimation(timeElapsed: Long) = {
     if (this.spriteChangeCooldown > 0) {

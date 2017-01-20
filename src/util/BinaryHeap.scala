@@ -118,7 +118,7 @@ class BinaryHeap[T]{
 	    key2idxMap -= key
 	    val delKV = heap(idx)
 	    val last = heap.remove(size-1)
-	    heap.update(idx, last)
+	    if (heap.size > 0) heap.update(idx, last)
 	    key2idxMap += (last.key -> idx)
 	    if(idx > 0 && last < heap((idx - 1) / 2)) bubbleUp(idx) else bubbleDown(idx)
 	  } catch{

@@ -3,6 +3,7 @@ package game
 import scala.collection.mutable.ArrayBuffer
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImage
+import scala.collection.mutable.Buffer
 
 /**
   * Created by Allu on 11/11/2016.
@@ -13,12 +14,16 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
   var weapon: Spell
   var direction: Direction
   
-  var moving = false
   var died = 0L // Time of death (for death animation)
   val deathAnimationLength: Int
   
   val collidesWithPlayer = true
   val collidesWithMonsters = true
+  
+  val baseSearchForNewPathCooldown = 2.0
+  var searchForNewPathCooldown = 0.0
+  
+  var path = Buffer[Cell]()
   
   def update(timeElapsed: Long): Unit = {
     // Update normally
@@ -53,31 +58,28 @@ abstract class Monster(x: Int, y: Int, world: World, speed: Double, maxHp: Int, 
   }
 
   def move(timeElapsed: Long): Unit = {
-    this.direction = this.playerDirection()
-    this.moving = true
-    this.moveUntilBlocked(timeElapsed)
-    this.moving = false
+    if (this.searchForNewPathCooldown > 0) {
+      this.searchForNewPathCooldown -= timeElapsed/1000.0
+    } else {
+      this.searchForNewPathCooldown = this.baseSearchForNewPathCooldown
+      this.path = PathFinding.aStar(this, 
+          this.world.getCell(game.player.centerX, game.player.centerY), this.world)
+    }
+    if (!this.path.isEmpty) {
+      this.path = this.location.moveAlongPath(path, this.speed*timeElapsed, this)
+      for (cell <- this.world.getCellsUnderLocation(this.location)) {
+        if (!cell.creatures.contains(this)) cell.creatures += this
+      }
+//      if (!this.path.isEmpty) this.direction = this.getDirection(path(0))
+//      else this.direction = this.getDirection(game.player)
+    }
+    this.direction = this.getDirection(game.player)
   }
 
   def attack(): Unit = {
     this.weapon.fire(this.location.x, this.location.y, this.world, this.direction)
   }
 
-  def playerDirection():Direction = {
-    val dx = game.player.centerX - this.centerX
-    val dy = game.player.centerY - this.centerY
-    
-    if (dx > 0 && dy > 0) SouthEast
-    else if (dx < 0 && dy > 0) SouthWest
-    else if (dx > 0 && dy < 0) NorthEast
-    else if (dx < 0 && dy < 0) NorthWest
-    else if (dx == 0 && dy < 0) North
-    else if (dx == 0 && dy > 0) South
-    else if (dx > 0 && dy == 0) East
-    else West
-    
-  }
-  
   def spriteOffset() = {
     if (this.direction == North || this.direction == South) {
       this.sprite.getHeight/2+game.player.sprite.getHeight/2
