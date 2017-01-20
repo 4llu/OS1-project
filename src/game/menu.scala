@@ -246,8 +246,8 @@ object gameOver extends Screen {
   },
   new C_Drawable() {
     // Game over text
-    var sprite = ImageIO.read(new File("media/UI/UI_return_button.png"))
-    var location = new Location(100, 100, sprite.getWidth, sprite.getHeight, null)
+    var sprite = ImageIO.read(new File("media/UI/game_over_text.png"))
+    var location = new Location(236, 190, sprite.getWidth, sprite.getHeight, null)
   })
   
   // Return button
@@ -269,6 +269,7 @@ object gameOver extends Screen {
   this.renderList ++= this.buttons
   
   def run() = {
+            
     while(this.buttons.filter (_.clicked).isEmpty) {
       this.draw(this.MS_PER_UPDATE)
     }
