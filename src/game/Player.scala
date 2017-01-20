@@ -61,6 +61,9 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
     if (game.keysPressed(Key.Space)) {
       this.fire()
     }
+    
+    if (game.keysPressed(Key.K) && !game.keysPressed(Key.M)) this.nextWeapon()
+    if (!game.keysPressed(Key.K) && game.keysPressed(Key.M)) this.previousWeapon()
 
     this.playerMoving = false
   }
