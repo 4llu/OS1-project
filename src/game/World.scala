@@ -6,7 +6,7 @@ import javax.imageio.ImageIO
 import java.awt.image.BufferedImage
 import scala.io.Source
 
-class World(worldNum: Int) {
+class World(val worldNum: Int) {
   // Load tile sprites
 
   private val groundTileSet = ImageIO.read(new File("media/ground_tiles.png"))
