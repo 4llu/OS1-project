@@ -6,7 +6,7 @@ import javax.imageio.ImageIO
 
 import scala.collection.mutable.ArrayBuffer
 
-class Goblin(x:Int, y:Int, world:World) extends Monster(x:Int, y:Int, world:World, 0.1, 15, 32) {
+class Penguin3(x:Int, y:Int, world:World) extends Monster(x:Int, y:Int, world:World, 0.1, 15, 32) {
   var weapon: Spell = new MeleeSpell(10)
   
   this.loadSprites()
@@ -19,7 +19,7 @@ class Goblin(x:Int, y:Int, world:World) extends Monster(x:Int, y:Int, world:Worl
   val baseSpriteChangeCooldown = 0.1
       
   def loadSprites() = {
-    val penguinSprites = ImageIO.read(new File("media/penguin.png")) // Wrong spritesheet
+    val penguinSprites = ImageIO.read(new File("media/penguin.png"))
     val directions = Vector[Direction](
          South, SouthEast, East, NorthEast, North, NorthWest, West, SouthWest)
     for (y <- 0 to 7) {

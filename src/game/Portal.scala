@@ -49,9 +49,9 @@ class Portal(x: Int, y: Int, world: World, waveNumber:Int, difficulty:Difficulty
   for (tier <- 0 to 2) {
     for (i <- 0 until (this.waveSize * this.monsterRatio(tier)).toInt) {
       val monster = tier match {
-        case 0 => new Goblin(this.location.x, this.location.y, this.location.world)
-        case 1 => new Orc(this.location.x, this.location.y, this.location.world)
-        case 2 => new Penguin(this.location.x, this.location.y, this.location.world)
+        case 0 => new Penguin3(this.location.x, this.location.y, this.location.world)
+        case 1 => new Penguin2(this.location.x, this.location.y, this.location.world)
+        case 2 => new Penguin1(this.location.x, this.location.y, this.location.world)
       }
       this.monstersToSpawn += monster
     }
