@@ -273,14 +273,14 @@ object gameOver extends Screen {
   
   this.renderList ++= this.buttons
   
-  val scorePanel = new BoxPanel(Orientation.Horizontal)
-  scorePanel.contents += new Label("Your score: "+game.points)
-  val gameOverFrame = new Frame()
-  gameOverFrame.contents =  scorePanel
-  gameOverFrame.visible = true
-  
   def run() = {
             
+    val scorePanel = new BoxPanel(Orientation.Horizontal)
+    scorePanel.contents += new Label("Your score: "+game.points)
+    val gameOverFrame = new Frame()
+    gameOverFrame.contents =  scorePanel
+    gameOverFrame.visible = true
+  
     while(this.buttons.filter (_.clicked).isEmpty) {
       this.draw(this.MS_PER_UPDATE)
     }
@@ -480,17 +480,17 @@ object highscores extends Screen {
   
   this.renderList ++= this.buttons
   
-  private var scores = highscoreManager.getHighscores(Medium) 
-  private var panel = new BoxPanel(Orientation.Horizontal)
-  for (score <- scores) {
-    panel.contents += new Label(score._1 +" "+ score._2 +" "+ score._3)
-  }
-  val highscoreframe = new Frame()
-  highscoreframe.contents = panel 
-  highscoreframe.visible = true
-  
-  
   def run() = {
+    
+    var scores = highscoreManager.getHighscores(Medium) 
+    var panel = new BoxPanel(Orientation.Horizontal)
+    for (score <- scores) {
+      panel.contents += new Label(score._1 +" "+ score._2 +" "+ score._3)
+    }
+    val highscoreframe = new Frame()
+    highscoreframe.contents = panel 
+    highscoreframe.visible = true
+    
     while(this.buttons.filter (_.clicked).isEmpty) {
       this.draw(this.MS_PER_UPDATE)
     }
