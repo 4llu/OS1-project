@@ -15,6 +15,4 @@ class IceShard(x:Int, y:Int, world:World, var direction: Direction, hitsMonsters
   val damage = 25
   var sprite: BufferedImage = ImageIO.read(new File("media/freezeball.png"))
   var location = new Location(x, y, sprite.getWidth, sprite.getHeight, world)
-  
-  override def toString: String = "IceShard"
 }
