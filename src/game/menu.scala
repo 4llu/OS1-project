@@ -246,7 +246,7 @@ object gameOver extends Screen {
   },
   new C_Drawable() {
     // Game over text
-    var sprite = ImageIO.read(new File("media/UI/UI_return_button.png"))
+    var sprite = ImageIO.read(new File("media/UI/game_over_text.png"))
     var location = new Location(100, 100, sprite.getWidth, sprite.getHeight, null)
   })
   

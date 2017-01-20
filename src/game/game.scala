@@ -119,8 +119,8 @@ object game extends Screen{
         // Recenter camera
         cameraX = 0
         cameraY = 0
-        // Game over, return to menu
-        menu
+        // Game over, move to game over screen
+        gameOver
     }
     
     /* Update all game Objects */
