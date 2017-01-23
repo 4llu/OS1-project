@@ -35,13 +35,13 @@ class Portal(x: Int, y: Int, world: World, waveNumber:Int, difficulty:Difficulty
 
   // Determine wave size and monster ratio
   if (waveNumber < 5) {         // Waves 0-5
-    this.waveSize = (waveNumber*1.5+1).toInt
+    this.waveSize = (waveNumber*2+1).toInt
     monsterRatio = ArrayBuffer[Double](1, 0, 0)
   } else if (waveNumber < 10) { // Waves 6-10
-    this.waveSize = (waveNumber * 0.75 + 1).toInt
+    this.waveSize = (waveNumber * 1.25 + 1).toInt
     monsterRatio = ArrayBuffer[Double](0.8, 0.2, 0)
   } else {                      // The rest of the waves
-    this.waveSize = (waveNumber * 0.5 + 1).toInt
+    this.waveSize = (waveNumber + 1).toInt
     monsterRatio = ArrayBuffer[Double](0.4, 0.3, 0.3)
   }
 
