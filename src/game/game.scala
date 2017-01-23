@@ -179,7 +179,8 @@ object game extends Screen{
   /* Start a new wave */
   def startWave(): Unit = {
     // Determine number of portals based on wave number
-    val portalCount = if (this.waveNumber < 5) 2 else 3
+    // val portalCount = if (this.waveNumber < 5) 2 else 3
+    val portalCount = this.waveNumber / 5 + 2
 
     // Create portals
     var portals = 0
@@ -204,7 +205,7 @@ object game extends Screen{
   /* Drop items */
   def dropItems(): Unit = {
     // Determine number of drops based on wave number
-    val dropNum = if (this.waveNumber < 5) 2 else 3
+    val dropNum = if (this.waveNumber < 10) 1 else if (this.waveNumber < 20) 2  else 3
     
     // Create drops
     var drops = 0

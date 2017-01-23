@@ -42,7 +42,7 @@ class Portal(x: Int, y: Int, world: World, waveNumber:Int, difficulty:Difficulty
     monsterRatio = ArrayBuffer[Double](0.8, 0.2, 0)
   } else {                      // The rest of the waves
     this.waveSize = (waveNumber * 0.5 + 1).toInt
-    monsterRatio = ArrayBuffer[Double](0.5, 0.3, 0.2)
+    monsterRatio = ArrayBuffer[Double](0.4, 0.3, 0.3)
   }
 
   // Create monsters

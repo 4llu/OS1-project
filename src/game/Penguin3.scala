@@ -6,7 +6,7 @@ import javax.imageio.ImageIO
 
 import scala.collection.mutable.ArrayBuffer
 
-class Penguin3(x:Int, y:Int, world:World) extends Monster(x:Int, y:Int, world:World, 0.1, 15, 40) {
+class Penguin3(x:Int, y:Int, world:World) extends Monster(x:Int, y:Int, world:World, 0.1, 20, 40) {
   var weapon: Spell = new MeleeSpell(10)
   
   this.loadSprites()
