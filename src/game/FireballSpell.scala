@@ -13,4 +13,6 @@ class FireballSpell extends Spell(0.25) {
   def projectiles(x: Int, y: Int, world: World, direction: Direction) = {
     ArrayBuffer[Projectile](new Fireball(x, y, world, direction, true, false))
   }
+  
+  override def toString: String = "FireballSpell"
 }

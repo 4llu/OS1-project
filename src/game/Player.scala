@@ -90,7 +90,6 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
       this.weapon = this.weapons(this.curWeapon)
       this.weapons -= oldWeapon
     }
-    println(this.weapon.ammo)
   }
 
   def nextWeapon(): Unit = {
@@ -111,16 +110,17 @@ class Player(x: Int, y: Int, world: World) extends Creature(x: Int, y: Int, worl
   /* Pick up a spell scroll and either gain it, or increase its ammo */
   def pickUpSpell(spell: String, ammoIncrease: Int): Unit = {
     var weaponFound = false
+    // Increase ammo
     for (weapon <- this.weapons) {
-      if (weapon.toString == spell) {
+      if (weapon.toString == spell || weaponFound) {
         this.weapon.ammo += ammoIncrease
         weaponFound = true
       }
     }
+    // Pick up new weapon
     if (!weaponFound) {
       this.weapons += (if (spell == "FirebombSpell") new FirebombSpell() else new IceShardSpell())
     }
-    println(this.weapons.length)
   }
 
   /* Load and separate player sprites */

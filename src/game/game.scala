@@ -44,6 +44,7 @@ object game extends Screen{
     
     val random = new Random()
 
+    // XXX Difficulty works, but there is no way too chose it
     /* Initialize the world with the right world and difficulty */
     def init(worldNum: Int, dif: Difficulty): Unit = {
       this.world = new World(worldNum) // Load the map
@@ -141,7 +142,7 @@ object game extends Screen{
       this.portalList = this.portalList.filter(!_.remove)
       this.dropList = this.dropList.filter(!_.remove)
       
-      // XXX NO TIME!!!!
+      // XXX Too late!!!!
       // Combos work, but there is no time to make a visible combo counter, so it is disabled for now
       // Update combo counter
       val curTime = System.currentTimeMillis() 
@@ -180,7 +181,7 @@ object game extends Screen{
   def startWave(): Unit = {
     // Determine number of portals based on wave number
     // val portalCount = if (this.waveNumber < 5) 2 else 3
-    val portalCount = this.waveNumber / 5 + 2
+    val portalCount = this.waveNumber / 7 + 2
 
     // Create portals
     var portals = 0
@@ -205,7 +206,7 @@ object game extends Screen{
   /* Drop items */
   def dropItems(): Unit = {
     // Determine number of drops based on wave number
-    val dropNum = if (this.waveNumber < 10) 1 else if (this.waveNumber < 20) 2  else 3
+    val dropNum = if (this.waveNumber < 10) 1 else if (this.waveNumber < 20) 2 else 3
     
     // Create drops
     var drops = 0
